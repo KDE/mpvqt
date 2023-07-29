@@ -84,4 +84,8 @@ configure_package_config_file(
 feature_summary(WHAT ALL FATAL_ON_MISSING_REQUIRED_PACKAGES)
 
 add_subdirectory(src)
-add_subdirectory(examples/video-player)
+
+option(BUILD_EXAMPLES "Whether to build the examples" OFF)
+if (BUILD_EXAMPLES)
+    add_subdirectory(examples/video-player)
+endif()
