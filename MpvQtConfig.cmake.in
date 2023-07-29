@@ -1,0 +1,26 @@
+#
+# SPDX-FileCopyrightText: 2023 George Florea Bănuș <georgefb899@gmail.com>
+#
+# SPDX-License-Identifier: BSD-2-Clause
+#
+
+@PACKAGE_INIT@
+
+include(CMakeFindDependencyMacro)
+
+if (NOT @BUILD_SHARED_LIBS@)
+    find_dependency(Qt@QT_MAJOR_VERSION@Core)
+    find_dependency(Qt@QT_MAJOR_VERSION@Gui)
+    find_dependency(Qt@QT_MAJOR_VERSION@Qml)
+    find_dependency(Qt@QT_MAJOR_VERSION@Quick)
+    if (@Qt5X11Extras_FOUND@)
+        find_dependency(Qt5X11Extras)
+    endif()
+
+    find_dependency(FFmpeg)
+    find_dependency(Libmpv)
+endif()
+
+
+include("${CMAKE_CURRENT_LIST_DIR}/MpvQtTargets.cmake")
+@PACKAGE_INCLUDE_QCHTARGETS@
