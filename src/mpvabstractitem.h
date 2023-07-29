@@ -8,6 +8,7 @@
 #define MPVABSTRACTITEM_H
 
 #include "mpvcontroller.h"
+#include "mpvqt_export.h"
 
 #include <QtQuick/QQuickFramebufferObject>
 #include <mpv/client.h>
@@ -15,7 +16,7 @@
 
 class MpvController;
 
-class MpvAbstractItem : public QQuickFramebufferObject
+class MPVQT_EXPORT MpvAbstractItem : public QQuickFramebufferObject
 {
     Q_OBJECT
 public:

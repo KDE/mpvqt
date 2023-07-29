@@ -20,6 +20,12 @@ target_sources(MpvQt
         mpvrenderer.h mpvrenderer.cpp
 )
 
+ecm_generate_export_header(MpvQt
+    BASE_NAME MpvQt
+    VERSION 1.0.0
+    USE_VERSION_HEADER
+)
+
 target_include_directories(MpvQt
     INTERFACE "$<INSTALL_INTERFACE:${KDE_INSTALL_INCLUDEDIR}/MpvQt>"
     PRIVATE ${Qt5Gui_PRIVATE_INCLUDE_DIRS}
@@ -45,7 +51,12 @@ ecm_generate_headers(MpvQt_HEADERS
 )
 
 install(TARGETS MpvQt EXPORT MpvQtTargets ${KDE_INSTALL_TARGETS_DEFAULT_ARGS})
-install(FILES ${MpvQt_HEADERS} DESTINATION ${KDE_INSTALL_INCLUDEDIR}/MpvQt COMPONENT Devel)
+
+install(FILES
+  ${CMAKE_CURRENT_BINARY_DIR}/mpvqt_export.h
+  ${MpvQt_HEADERS}
+  DESTINATION ${KDE_INSTALL_INCLUDEDIR}/MpvQt COMPONENT Devel
+)
 
 install(FILES
     "${CMAKE_CURRENT_BINARY_DIR}/MpvQtConfigConfig.cmake"
