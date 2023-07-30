@@ -7,6 +7,8 @@
 #ifndef MPVCONTROLLER_H
 #define MPVCONTROLLER_H
 
+#include "mpvqt_export.h"
+
 #include <QMap>
 #include <QObject>
 
@@ -52,7 +54,7 @@ struct ErrorReturn {
 };
 Q_DECLARE_METATYPE(ErrorReturn)
 
-class MpvController : public QObject
+class MPVQT_EXPORT MpvController : public QObject
 {
     Q_OBJECT
 public:
