@@ -7,7 +7,7 @@
 #ifndef MPVOBJECT_H
 #define MPVOBJECT_H
 
-#include "mpvabstractitem.h"
+#include <MpvAbstractItem>
 
 class MpvRenderer;
 

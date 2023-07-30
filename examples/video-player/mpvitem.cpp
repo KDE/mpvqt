@@ -5,6 +5,9 @@
  */
 
 #include "mpvitem.h"
+
+#include <MpvController>
+
 #include "mpvproperties.h"
 
 MpvItem::MpvItem(QQuickItem *parent)
