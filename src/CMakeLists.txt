@@ -59,8 +59,8 @@ install(FILES
 )
 
 install(FILES
-    "${CMAKE_CURRENT_BINARY_DIR}/MpvQtConfig.cmake"
-    "${CMAKE_CURRENT_BINARY_DIR}/MpvQtConfigVersion.cmake"
+    "${CMAKE_SOURCE_DIR}/MpvQtConfig.cmake"
+    "${CMAKE_SOURCE_DIR}/MpvQtConfigVersion.cmake"
     DESTINATION "${CMAKECONFIG_INSTALL_DIR}"
     COMPONENT Devel
 )
@@ -68,6 +68,6 @@ install(FILES
 install(EXPORT MpvQtTargets DESTINATION "${CMAKECONFIG_INSTALL_DIR}" FILE MpvQtTargets.cmake NAMESPACE MpvQt:: )
 
 install(FILES
-    "${CMAKE_CURRENT_BINARY_DIR}/src/mpvqt_version.h"
+    "${CMAKE_CURRENT_BINARY_DIR}/mpvqt_version.h"
     DESTINATION ${KDE_INSTALL_INCLUDEDIR}/MpvQt COMPONENT Devel
 )
