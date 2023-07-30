@@ -59,8 +59,8 @@ install(FILES
 )
 
 install(FILES
-    "${CMAKE_CURRENT_BINARY_DIR}/MpvQtConfigConfig.cmake"
-    "${CMAKE_CURRENT_BINARY_DIR}/MpvQtConfigConfigVersion.cmake"
+    "${CMAKE_CURRENT_BINARY_DIR}/MpvQtConfig.cmake"
+    "${CMAKE_CURRENT_BINARY_DIR}/MpvQtConfigVersion.cmake"
     DESTINATION "${CMAKECONFIG_INSTALL_DIR}"
     COMPONENT Devel
 )
