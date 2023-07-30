@@ -7,7 +7,6 @@
 #ifndef MPVABSTRACTITEM_H
 #define MPVABSTRACTITEM_H
 
-#include "mpvcontroller.h"
 #include "mpvqt_export.h"
 
 #include <QtQuick/QQuickFramebufferObject>
