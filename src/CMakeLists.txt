@@ -47,15 +47,17 @@ endif ()
 
 ecm_generate_headers(MpvQt_HEADERS
     HEADER_NAMES MpvAbstractItem
+                 MpvController
     REQUIRED_HEADERS MpvQt_HEADERS
 )
 
 install(TARGETS MpvQt EXPORT MpvQtTargets ${KDE_INSTALL_TARGETS_DEFAULT_ARGS})
 
 install(FILES
-  ${CMAKE_CURRENT_BINARY_DIR}/mpvqt_export.h
-  ${MpvQt_HEADERS}
-  DESTINATION ${KDE_INSTALL_INCLUDEDIR}/MpvQt COMPONENT Devel
+    ${CMAKE_CURRENT_BINARY_DIR}/mpvqt_export.h
+    ${CMAKE_CURRENT_BINARY_DIR}/mpvqt_version.h
+    ${MpvQt_HEADERS}
+    DESTINATION ${KDE_INSTALL_INCLUDEDIR}/MpvQt COMPONENT Devel
 )
 
 install(FILES
@@ -66,8 +68,3 @@ install(FILES
 )
 
 install(EXPORT MpvQtTargets DESTINATION "${CMAKECONFIG_INSTALL_DIR}" FILE MpvQtTargets.cmake NAMESPACE MpvQt:: )
-
-install(FILES
-    "${CMAKE_CURRENT_BINARY_DIR}/mpvqt_version.h"
-    DESTINATION ${KDE_INSTALL_INCLUDEDIR}/MpvQt COMPONENT Devel
-)
