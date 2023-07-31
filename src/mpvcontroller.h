@@ -66,8 +66,8 @@ public:
      * @param `property` the name of the property
      * @return mpv error code (<0 on error, >= 0 on success)
      */
-    Q_INVOKABLE int setProperty(const QString &property, const QVariant &value);
-    Q_INVOKABLE int setPropertyAsync(const QString &property, const QVariant &value, int id);
+    int setProperty(const QString &property, const QVariant &value);
+    int setPropertyAsync(const QString &property, const QVariant &value, int id);
 
     /**
      * Return the given property as mpv_node converted to QVariant,
@@ -76,8 +76,8 @@ public:
      * @param `property` the name of the property
      * @return the property value, or an ErrorReturn with the error code
      */
-    Q_INVOKABLE QVariant getProperty(const QString &property);
-    Q_INVOKABLE int getPropertyAsync(const QString &property, int id);
+    QVariant getProperty(const QString &property);
+    int getPropertyAsync(const QString &property, int id);
 
     /**
      * mpv_command_node() equivalent.
@@ -85,12 +85,12 @@ public:
      * @param `args` command arguments, with args[0] being the command name as string
      * @return the property value, or an ErrorReturn with the error code
      */
-    Q_INVOKABLE QVariant command(const QVariant &params);
+    QVariant command(const QVariant &params);
 
     /**
      * Return an error string from an ErrorReturn.
      */
-    Q_INVOKABLE QString getError(int error);
+    QString getError(int error);
 
     static void mpvEvents(void *ctx);
     void eventHandler();
