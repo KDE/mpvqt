@@ -22,7 +22,7 @@ MpvItem::MpvItem(QQuickItem *parent)
     setupConnections();
 
     // since this is async the effects are not immediately visible
-    // to do something after the property was set do it in onSetPropertyReply
+    // to do something after the property was set do it in onAsyncReply
     // use the id to identify the correct call
     setPropertyAsync(QStringLiteral("volume"), 99, static_cast<int>(MpvItem::AsyncIds::SetVolume));
     setProperty(QStringLiteral("mute"), true);
@@ -83,17 +83,6 @@ void MpvItem::onPropertyChanged(const QString &property, const QVariant &value)
     }
 }
 
-void MpvItem::loadFile(const QString &file)
-{
-    auto url = QUrl::fromUserInput(file);
-    if (m_currentUrl != url) {
-        m_currentUrl = url;
-        Q_EMIT currentUrlChanged();
-    }
-
-    Q_EMIT command(QStringList() << QStringLiteral("loadfile") << m_currentUrl.toLocalFile());
-}
-
 void MpvItem::onAsyncReply(const QVariant &data, int id)
 {
     switch (static_cast<AsyncIds>(id)) {
@@ -126,6 +115,17 @@ QString MpvItem::formatTime(const double time)
         QStringLiteral("%1:%2:%3").arg(hours, 2, 10, QLatin1Char('0')).arg(minutes, 2, 10, QLatin1Char('0')).arg(seconds, 2, 10, QLatin1Char('0'));
 
     return timeString;
+}
+
+void MpvItem::loadFile(const QString &file)
+{
+    auto url = QUrl::fromUserInput(file);
+    if (m_currentUrl != url) {
+        m_currentUrl = url;
+        Q_EMIT currentUrlChanged();
+    }
+
+    Q_EMIT command(QStringList() << QStringLiteral("loadfile") << m_currentUrl.toLocalFile());
 }
 
 QString MpvItem::mediaTitle()
