@@ -11,6 +11,7 @@
 
 #include <QMap>
 #include <QObject>
+#include <QVariant>
 
 #include <mpv/client.h>
 #include <mpv/render_gl.h>
