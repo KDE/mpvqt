@@ -44,7 +44,7 @@ set(X11_PLATFORMS Linux FreeBSD GNU/kFreeBSD NetBSD OpenBSD)
 # FIND PACKAGES
 #
 
-find_package(QT NAMES Qt6 Qt5 REQUIRED COMPONENTS Core Gui Qml Quick QuickControls2)
+find_package(QT NAMES Qt6 Qt5 REQUIRED COMPONENTS Quick)
 
 find_package(Qt${QT_MAJOR_VERSION}Quick)
 set_package_properties(Qt${QT_MAJOR_VERSION}Quick PROPERTIES TYPE REQUIRED)
