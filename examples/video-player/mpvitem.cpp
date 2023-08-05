@@ -24,17 +24,18 @@ MpvItem::MpvItem(QQuickItem *parent)
     // since this is async the effects are not immediately visible
     // to do something after the property was set do it in onSetPropertyReply
     // use the id to identify the correct call
-    Q_EMIT setPropertyAsync(QStringLiteral("volume"), 99, 123);
-    setPropertySynchronous(QStringLiteral("mute"), true);
+    setPropertyAsync(QStringLiteral("volume"), 99, 123);
+    setProperty(QStringLiteral("mute"), true);
 
     // since this is async the effects are not immediately visible
     // to get the value do it in onGetPropertyReply
     // use the id to identify the correct call
-    Q_EMIT getPropertyAsync(MpvProperties::self()->Volume, 312);
+    getPropertyAsync(MpvProperties::self()->Volume, 312);
 }
 
 void MpvItem::setupConnections()
 {
+    // clang-format off
     connect(m_mpvController, &MpvController::propertyChanged,
             this, &MpvItem::onPropertyChanged, Qt::QueuedConnection);
 
@@ -50,12 +51,9 @@ void MpvItem::setupConnections()
     connect(m_mpvController, &MpvController::videoReconfig,
             this, &MpvItem::videoReconfig, Qt::QueuedConnection);
 
-    connect(m_mpvController, &MpvController::setPropertyReply,
-            this, &MpvItem::onSetPropertyReply, Qt::QueuedConnection);
-
-    connect(m_mpvController, &MpvController::getPropertyReply,
-            this, &MpvItem::onGetPropertyReply, Qt::QueuedConnection);
-
+    connect(m_mpvController, &MpvController::asyncReply,
+            this, &MpvItem::onAsyncReply, Qt::QueuedConnection);
+    // clang-format on
 }
 
 void MpvItem::onPropertyChanged(const QString &property, const QVariant &value)
@@ -96,24 +94,24 @@ void MpvItem::loadFile(const QString &file)
     Q_EMIT command(QStringList() << QStringLiteral("loadfile") << m_currentUrl.toLocalFile());
 }
 
-void MpvItem::onSetPropertyReply(int id)
+void MpvItem::onAsyncReply(const QVariant &data, int id)
 {
     switch (id) {
-    case 123:
+    case 0: {
+        break;
+    }
+    case 123: {
         qDebug() << "onSetPropertyReply" << id;
         break;
     }
-}
-
-void MpvItem::onGetPropertyReply(const QVariant &value, int id)
-{
-    switch (id) {
-    case 312:
-        qDebug() << "onGetPropertyReply" << id << value;
+    case 312: {
+        qDebug() << "onGetPropertyReply" << id << data;
         break;
-    case 333:
-        qDebug() << "onGetPropertyReply" << id << value;
+    }
+    case 333: {
+        qDebug() << "onGetPropertyReply" << id << data;
         break;
+    }
     }
 }
 

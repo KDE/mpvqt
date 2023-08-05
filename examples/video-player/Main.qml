@@ -24,6 +24,8 @@ Window {
         // do not load file on Component.onCompleted
         // onReady: loadFile(["/path/to/video_file.mkv"])
 
+        onFileLoaded: commandAsync(["expand-text", "volume is ${volume}"], 333);
+
         Rectangle {
             width: 200
             height: 40
@@ -41,7 +43,7 @@ Window {
 
         Shortcut {
             sequence: "m"
-            onActivated: mpv.setPropertyAsync(MpvProperties.Mute, !mpv.getPropertySynchronous(MpvProperties.Mute))
+            onActivated: mpv.setPropertyAsync(MpvProperties.Mute, !mpv.getProperty(MpvProperties.Mute))
         }
 
         Shortcut {
