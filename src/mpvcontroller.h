@@ -67,7 +67,7 @@ public:
      * @return mpv error code (<0 on error, >= 0 on success)
      */
     int setProperty(const QString &property, const QVariant &value);
-    int setPropertyAsync(const QString &property, const QVariant &value, int id);
+    int setPropertyAsync(const QString &property, const QVariant &value, int id = 0);
 
     /**
      * Return the given property as mpv_node converted to QVariant,
@@ -77,7 +77,7 @@ public:
      * @return the property value, or an ErrorReturn with the error code
      */
     QVariant getProperty(const QString &property);
-    int getPropertyAsync(const QString &property, int id);
+    int getPropertyAsync(const QString &property, int id = 0);
 
     /**
      * mpv_command_node() equivalent.
@@ -86,6 +86,7 @@ public:
      * @return the property value, or an ErrorReturn with the error code
      */
     QVariant command(const QVariant &params);
+    int commandAsync(const QVariant &params, int id = 0);
 
     /**
      * Return an error string from an ErrorReturn.
@@ -98,8 +99,7 @@ public:
 
 Q_SIGNALS:
     void propertyChanged(const QString &property, const QVariant &value);
-    void getPropertyReply(const QVariant &value, int id);
-    void setPropertyReply(int id);
+    void asyncReply(const QVariant &value = QVariant(), int id = 0);
     void fileStarted();
     void fileLoaded();
     void endFile(QString reason);

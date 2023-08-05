@@ -45,10 +45,12 @@ void MpvController::eventHandler()
             Q_EMIT fileStarted();
             break;
         }
+
         case MPV_EVENT_FILE_LOADED: {
             Q_EMIT fileLoaded();
             break;
         }
+
         case MPV_EVENT_END_FILE: {
             auto prop = static_cast<mpv_event_end_file *>(event->data);
             if (prop->reason == MPV_END_FILE_REASON_EOF) {
@@ -58,18 +60,28 @@ void MpvController::eventHandler()
             }
             break;
         }
+
         case MPV_EVENT_VIDEO_RECONFIG: {
             Q_EMIT videoReconfig();
             break;
         }
+
         case MPV_EVENT_GET_PROPERTY_REPLY: {
             mpv_event_property *prop = static_cast<mpv_event_property *>(event->data);
             auto data = node_to_variant(reinterpret_cast<mpv_node *>(prop->data));
-            Q_EMIT getPropertyReply(data.toString(), event->reply_userdata);
+            Q_EMIT asyncReply(data.toString(), event->reply_userdata);
             break;
         }
+
         case MPV_EVENT_SET_PROPERTY_REPLY: {
-            Q_EMIT setPropertyReply(event->reply_userdata);
+            Q_EMIT asyncReply(QVariant(), event->reply_userdata);
+            break;
+        }
+
+        case MPV_EVENT_COMMAND_REPLY: {
+            mpv_event_property *prop = static_cast<mpv_event_property *>(event->data);
+            auto data = node_to_variant(reinterpret_cast<mpv_node *>(prop));
+            Q_EMIT asyncReply(data, event->reply_userdata);
             break;
         }
 
@@ -149,6 +161,13 @@ QVariant MpvController::command(const QVariant &params)
     }
     node_autofree f(&result);
     return node_to_variant(&result);
+}
+
+int MpvController::commandAsync(const QVariant &params, int id)
+{
+    mpv_node node;
+    setNode(&node, params);
+    return mpv_command_node_async(m_mpv, id, &node);
 }
 
 QString MpvController::getError(int error)
