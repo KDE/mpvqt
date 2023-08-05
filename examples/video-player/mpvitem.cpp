@@ -24,13 +24,13 @@ MpvItem::MpvItem(QQuickItem *parent)
     // since this is async the effects are not immediately visible
     // to do something after the property was set do it in onSetPropertyReply
     // use the id to identify the correct call
-    setPropertyAsync(QStringLiteral("volume"), 99, 123);
+    setPropertyAsync(QStringLiteral("volume"), 99, static_cast<int>(MpvItem::AsyncIds::SetVolume));
     setProperty(QStringLiteral("mute"), true);
 
     // since this is async the effects are not immediately visible
     // to get the value do it in onGetPropertyReply
     // use the id to identify the correct call
-    getPropertyAsync(MpvProperties::self()->Volume, 312);
+    getPropertyAsync(MpvProperties::self()->Volume, static_cast<int>(MpvItem::AsyncIds::GetVolume));
 }
 
 void MpvItem::setupConnections()
@@ -96,19 +96,19 @@ void MpvItem::loadFile(const QString &file)
 
 void MpvItem::onAsyncReply(const QVariant &data, int id)
 {
-    switch (id) {
-    case 0: {
+    switch (static_cast<AsyncIds>(id)) {
+    case AsyncIds::None: {
         break;
     }
-    case 123: {
+    case AsyncIds::SetVolume: {
         qDebug() << "onSetPropertyReply" << id;
         break;
     }
-    case 312: {
+    case AsyncIds::GetVolume: {
         qDebug() << "onGetPropertyReply" << id << data;
         break;
     }
-    case 333: {
+    case AsyncIds::ExpandText: {
         qDebug() << "onGetPropertyReply" << id << data;
         break;
     }

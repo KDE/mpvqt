@@ -24,7 +24,7 @@ Window {
         // do not load file on Component.onCompleted
         // onReady: loadFile(["/path/to/video_file.mkv"])
 
-        onFileLoaded: commandAsync(["expand-text", "volume is ${volume}"], 333);
+        onFileLoaded: commandAsync(["expand-text", "volume is ${volume}"], MpvItem.ExpandText);
 
         Rectangle {
             width: 200

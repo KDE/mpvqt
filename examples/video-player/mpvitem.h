@@ -18,6 +18,14 @@ public:
     explicit MpvItem(QQuickItem *parent = nullptr);
     ~MpvItem() = default;
 
+    enum class AsyncIds {
+        None,
+        SetVolume,
+        GetVolume,
+        ExpandText,
+    };
+    Q_ENUM(AsyncIds)
+
     Q_PROPERTY(QString mediaTitle READ mediaTitle NOTIFY mediaTitleChanged)
     QString mediaTitle();
 
