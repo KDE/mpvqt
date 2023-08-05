@@ -20,19 +20,7 @@ MpvAbstractItem::MpvAbstractItem(QQuickItem *parent)
     m_mpvController->moveToThread(m_workerThread);
     m_mpv = m_mpvController->mpv();
 
-    // clang-format off
-    connect(m_workerThread, &QThread::finished,
-            m_mpvController, &MpvController::deleteLater);
-
-    connect(this, &MpvAbstractItem::setPropertyAsync,
-            m_mpvController, &MpvController::setPropertyAsync, Qt::QueuedConnection);
-
-    connect(this, &MpvAbstractItem::getPropertyAsync,
-            m_mpvController, &MpvController::getPropertyAsync, Qt::QueuedConnection);
-
-    connect(this, &MpvAbstractItem::command,
-            m_mpvController, &MpvController::command, Qt::QueuedConnection);
-    // clang-format on
+    connect(m_workerThread, &QThread::finished, m_mpvController, &MpvController::deleteLater);
 }
 
 MpvAbstractItem::~MpvAbstractItem()
