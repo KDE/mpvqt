@@ -53,14 +53,49 @@ QQuickFramebufferObject::Renderer *MpvAbstractItem::createRenderer() const
     return new MpvRenderer(const_cast<MpvAbstractItem *>(this));
 }
 
-int MpvAbstractItem::setPropertySynchronous(const QString &property, const QVariant &value)
+int MpvAbstractItem::setProperty(const QString &property, const QVariant &value)
 {
     return m_mpvController->setProperty(property, value);
 }
 
-QVariant MpvAbstractItem::getPropertySynchronous(const QString &property)
+int MpvAbstractItem::setPropertyAsync(const QString &property, const QVariant &value, int id)
+{
+    return m_mpvController->setPropertyAsync(property, value, id);
+}
+
+QVariant MpvAbstractItem::getProperty(const QString &property)
 {
     return m_mpvController->getProperty(property);
+}
+
+int MpvAbstractItem::getPropertyAsync(const QString &property, int id)
+{
+    return m_mpvController->getPropertyAsync(property, id);
+}
+
+QVariant MpvAbstractItem::expandText(const QString &text)
+{
+    return m_mpvController->command(QStringList{QStringLiteral("expand-text"), text});
+}
+
+QVariant MpvAbstractItem::getCachedPropertyValue(const QString &property)
+{
+    if (!m_propertiesCache[property].isValid()) {
+        auto value = getProperty(property);
+        cachePropertyValue(property, value);
+        return value;
+    }
+    return m_propertiesCache[property];
+}
+
+QVariant MpvAbstractItem::command(const QStringList &params)
+{
+    return m_mpvController->command(params);
+}
+
+int MpvAbstractItem::commandAsync(const QStringList &params, int id)
+{
+    return m_mpvController->commandAsync(params, id);
 }
 
 void MpvAbstractItem::observeProperty(const QString &property, mpv_format format, int id)
@@ -71,26 +106,6 @@ void MpvAbstractItem::observeProperty(const QString &property, mpv_format format
 void MpvAbstractItem::cachePropertyValue(const QString &property, const QVariant &value)
 {
     m_propertiesCache[property] = value;
-}
-
-QVariant MpvAbstractItem::getCachedPropertyValue(const QString &property)
-{
-    if (!m_propertiesCache[property].isValid()) {
-        auto value = getPropertySynchronous(property);
-        cachePropertyValue(property, value);
-        return value;
-    }
-    return m_propertiesCache[property];
-}
-
-QVariant MpvAbstractItem::expandText(const QString &text)
-{
-    return m_mpvController->command(QStringList{QStringLiteral("expand-text"), text});
-}
-
-QVariant MpvAbstractItem::synchronousCommand(const QStringList &params)
-{
-    return m_mpvController->command(params);
 }
 
 #include "moc_mpvabstractitem.cpp"
