@@ -68,6 +68,18 @@ public:
      * @return mpv error code (<0 on error, >= 0 on success)
      */
     int setProperty(const QString &property, const QVariant &value);
+
+    /**
+     * Set a property asynchronously. The result of the operation as well
+     * as the property data will be received in the MPV_EVENT_SET_PROPERTY_REPLY event,
+     * handled by the eventHandler method. To do something after the property was set
+     * connect to the asyncReply signal and use the id to identify the request.
+     *
+     * @param `property` the name of the property
+     * @param `value` the value to set the property to
+     * @param `id` used to associate requests with replies
+     * @return error code if sending the request failed
+     */
     int setPropertyAsync(const QString &property, const QVariant &value, int id = 0);
 
     /**
@@ -78,15 +90,37 @@ public:
      * @return the property value, or an ErrorReturn with the error code
      */
     QVariant getProperty(const QString &property);
+
+    /**
+     * Get a property asynchronously. The result of the operation as well
+     * as the property data will be received in the MPV_EVENT_GET_PROPERTY_REPLY event,
+     * handled by the eventHandler method. To get the value connect to the asyncReply signal
+     * and use the id to identify the request.
+     *
+     * @param `property` the name of the property
+     * @param `id` used to associate requests with replies
+     * @return error code if sending the request failed
+     */
     int getPropertyAsync(const QString &property, int id = 0);
 
     /**
      * mpv_command_node() equivalent.
      *
-     * @param `args` command arguments, with args[0] being the command name as string
+     * @param `params` command arguments, with args[0] being the command name as string
      * @return the property value, or an ErrorReturn with the error code
      */
     QVariant command(const QVariant &params);
+
+    /**
+     * Run commands asynchronously. The result of the operation as well
+     * as the property data will be received in the MPV_EVENT_COMMAND_REPLY event,
+     * handled by the eventHandler method. To do something after the command was run,
+     * connect to the asyncReply signal and use the id to identify the request.
+     *
+     * @param `params` command arguments, with args[0] being the command name as string
+     * @param `id` used to associate requests with replies
+     * @return error code (if parsing or queuing the command fails)
+     */
     int commandAsync(const QVariant &params, int id = 0);
 
     /**
