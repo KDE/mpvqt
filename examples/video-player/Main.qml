@@ -24,6 +24,7 @@ Window {
         // do not load file on Component.onCompleted
         // onReady: loadFile(["/path/to/video_file.mkv"])
 
+        // the results of all the async methods calls are received by MpvItem::onAsyncReply
         onFileLoaded: commandAsync(["expand-text", "volume is ${volume}"], MpvItem.ExpandText);
 
         Rectangle {
