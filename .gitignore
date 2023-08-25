@@ -9,6 +9,8 @@
 
 ### KDE ###
 .directory
+.kdev4
+*.kdev4
 
 ### C++ ###
 # Prerequisites
