@@ -16,6 +16,10 @@
 #include <mpv/client.h>
 #include <mpv/render_gl.h>
 
+#include <memory>
+
+class MpvControllerPrivate;
+
 /**
  * RAII wrapper that calls mpv_free_node_contents() on the pointer.
  */
@@ -141,13 +145,8 @@ Q_SIGNALS:
     void videoReconfig();
 
 private:
-    mpv_node_list *create_list(mpv_node *dst, bool is_map, int num);
-    void setNode(mpv_node *dst, const QVariant &src);
-    bool test_type(const QVariant &v, QMetaType::Type t);
-    void free_node(mpv_node *dst);
-    QVariant node_to_variant(const mpv_node *node);
-
-    mpv_handle *m_mpv{nullptr};
+    MpvController(MpvControllerPrivate &d);
+    std::unique_ptr<MpvControllerPrivate> d_ptr;
 };
 
 #endif // MPVCONTROLLER_H

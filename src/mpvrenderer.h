@@ -9,7 +9,7 @@
 
 #include <QtQuick/QQuickFramebufferObject>
 
-#include "mpvabstractitem.h"
+class MpvAbstractItem;
 
 class MpvRenderer : public QQuickFramebufferObject::Renderer
 {

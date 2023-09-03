@@ -5,35 +5,52 @@
  */
 
 #include "mpvabstractitem.h"
+#include "mpvabstractitem_p.h"
 
 #include <QThread>
 
 #include "mpvcontroller.h"
 #include "mpvrenderer.h"
 
+MpvAbstractItemPrivate::MpvAbstractItemPrivate(MpvAbstractItem *q)
+    : q_ptr(q)
+{
+}
+
+void MpvAbstractItemPrivate::observeProperty(const QString &property, mpv_format format, int id)
+{
+    mpv_observe_property(m_mpv, id, property.toUtf8().data(), format);
+}
+
+void MpvAbstractItemPrivate::cachePropertyValue(const QString &property, const QVariant &value)
+{
+    m_propertiesCache[property] = value;
+}
+
 MpvAbstractItem::MpvAbstractItem(QQuickItem *parent)
     : QQuickFramebufferObject(parent)
-    , m_workerThread{new QThread}
-    , m_mpvController{new MpvController}
+    , d_ptr{std::make_unique<MpvAbstractItemPrivate>(this)}
 {
-    m_workerThread->start();
-    m_mpvController->moveToThread(m_workerThread);
-    m_mpv = m_mpvController->mpv();
+    d_ptr->m_workerThread = new QThread;
+    d_ptr->m_mpvController = new MpvController;
+    d_ptr->m_workerThread->start();
+    d_ptr->m_mpvController->moveToThread(d_ptr->m_workerThread);
+    d_ptr->m_mpv = d_ptr->m_mpvController->mpv();
 
-    connect(m_workerThread, &QThread::finished, m_mpvController, &MpvController::deleteLater);
+    connect(d_ptr->m_workerThread, &QThread::finished, d_ptr->m_mpvController, &MpvController::deleteLater);
 }
 
 MpvAbstractItem::~MpvAbstractItem()
 {
-    if (m_mpv_gl) {
-        mpv_render_context_free(m_mpv_gl);
+    if (d_ptr->m_mpv_gl) {
+        mpv_render_context_free(d_ptr->m_mpv_gl);
     }
-    mpv_set_wakeup_callback(m_mpv, nullptr, nullptr);
+    mpv_set_wakeup_callback(d_ptr->m_mpv, nullptr, nullptr);
 
-    m_workerThread->quit();
-    m_workerThread->wait();
-    m_workerThread->deleteLater();
-    mpv_terminate_destroy(m_mpv);
+    d_ptr->m_workerThread->quit();
+    d_ptr->m_workerThread->wait();
+    d_ptr->m_workerThread->deleteLater();
+    mpv_terminate_destroy(d_ptr->m_mpv);
 }
 
 QQuickFramebufferObject::Renderer *MpvAbstractItem::createRenderer() const
@@ -43,57 +60,47 @@ QQuickFramebufferObject::Renderer *MpvAbstractItem::createRenderer() const
 
 int MpvAbstractItem::setProperty(const QString &property, const QVariant &value)
 {
-    return m_mpvController->setProperty(property, value);
+    return d_ptr->m_mpvController->setProperty(property, value);
 }
 
 int MpvAbstractItem::setPropertyAsync(const QString &property, const QVariant &value, int id)
 {
-    return m_mpvController->setPropertyAsync(property, value, id);
+    return d_ptr->m_mpvController->setPropertyAsync(property, value, id);
 }
 
 QVariant MpvAbstractItem::getProperty(const QString &property)
 {
-    return m_mpvController->getProperty(property);
+    return d_ptr->m_mpvController->getProperty(property);
 }
 
 int MpvAbstractItem::getPropertyAsync(const QString &property, int id)
 {
-    return m_mpvController->getPropertyAsync(property, id);
+    return d_ptr->m_mpvController->getPropertyAsync(property, id);
 }
 
 QVariant MpvAbstractItem::expandText(const QString &text)
 {
-    return m_mpvController->command(QStringList{QStringLiteral("expand-text"), text});
+    return d_ptr->m_mpvController->command(QStringList{QStringLiteral("expand-text"), text});
 }
 
 QVariant MpvAbstractItem::getCachedPropertyValue(const QString &property)
 {
-    if (!m_propertiesCache[property].isValid()) {
+    if (!d_ptr->m_propertiesCache[property].isValid()) {
         auto value = getProperty(property);
-        cachePropertyValue(property, value);
+        d_ptr->cachePropertyValue(property, value);
         return value;
     }
-    return m_propertiesCache[property];
+    return d_ptr->m_propertiesCache[property];
 }
 
 QVariant MpvAbstractItem::command(const QStringList &params)
 {
-    return m_mpvController->command(params);
+    return d_ptr->m_mpvController->command(params);
 }
 
 int MpvAbstractItem::commandAsync(const QStringList &params, int id)
 {
-    return m_mpvController->commandAsync(params, id);
-}
-
-void MpvAbstractItem::observeProperty(const QString &property, mpv_format format, int id)
-{
-    mpv_observe_property(m_mpv, id, property.toUtf8().data(), format);
-}
-
-void MpvAbstractItem::cachePropertyValue(const QString &property, const QVariant &value)
-{
-    m_propertiesCache[property] = value;
+    return d_ptr->m_mpvController->commandAsync(params, id);
 }
 
 #include "moc_mpvabstractitem.cpp"

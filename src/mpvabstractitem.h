@@ -14,6 +14,7 @@
 #include <mpv/render_gl.h>
 
 class MpvController;
+class MpvAbstractItemPrivate;
 
 class MPVQT_EXPORT MpvAbstractItem : public QQuickFramebufferObject
 {
@@ -38,14 +39,8 @@ Q_SIGNALS:
     void ready();
 
 protected:
-    void observeProperty(const QString &property, mpv_format format, int id = 0);
-    void cachePropertyValue(const QString &property, const QVariant &value);
-
-    QThread *m_workerThread{nullptr};
-    MpvController *m_mpvController{nullptr};
-    mpv_handle *m_mpv{nullptr};
-    mpv_render_context *m_mpv_gl{nullptr};
-    QMap<QString, QVariant> m_propertiesCache;
+    MpvAbstractItem(MpvAbstractItemPrivate &d);
+    std::unique_ptr<MpvAbstractItemPrivate> d_ptr;
 };
 
 #endif // MPVABSTRACTITEM_H
