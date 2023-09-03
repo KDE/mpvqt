@@ -17,24 +17,24 @@ MpvControllerPrivate::MpvControllerPrivate(MpvController *q)
 {
 }
 
-mpv_node_list *MpvControllerPrivate::create_list(mpv_node *dst, bool is_map, int num)
+mpv_node_list *MpvControllerPrivate::createList(mpv_node *dst, bool is_map, int num)
 {
     dst->format = is_map ? MPV_FORMAT_NODE_MAP : MPV_FORMAT_NODE_ARRAY;
     mpv_node_list *list = new mpv_node_list();
     dst->u.list = list;
     if (!list) {
-        free_node(dst);
+        freeNode(dst);
         return nullptr;
     }
     list->values = new mpv_node[num]();
     if (!list->values) {
-        free_node(dst);
+        freeNode(dst);
         return nullptr;
     }
     if (is_map) {
         list->keys = new char *[num]();
         if (!list->keys) {
-            free_node(dst);
+            freeNode(dst);
             return nullptr;
         }
     }
@@ -43,25 +43,24 @@ mpv_node_list *MpvControllerPrivate::create_list(mpv_node *dst, bool is_map, int
 
 void MpvControllerPrivate::setNode(mpv_node *dst, const QVariant &src)
 {
-    if (test_type(src, QMetaType::QString)) {
+    if (testType(src, QMetaType::QString)) {
         dst->format = MPV_FORMAT_STRING;
         dst->u.string = qstrdup(src.toString().toUtf8().data());
         if (!dst->u.string) {
             dst->format = MPV_FORMAT_NONE;
         }
-    } else if (test_type(src, QMetaType::Bool)) {
+    } else if (testType(src, QMetaType::Bool)) {
         dst->format = MPV_FORMAT_FLAG;
         dst->u.flag = src.toBool() ? 1 : 0;
-    } else if (test_type(src, QMetaType::Int) || test_type(src, QMetaType::LongLong) || test_type(src, QMetaType::UInt)
-               || test_type(src, QMetaType::ULongLong)) {
+    } else if (testType(src, QMetaType::Int) || testType(src, QMetaType::LongLong) || testType(src, QMetaType::UInt) || testType(src, QMetaType::ULongLong)) {
         dst->format = MPV_FORMAT_INT64;
         dst->u.int64 = src.toLongLong();
-    } else if (test_type(src, QMetaType::Double)) {
+    } else if (testType(src, QMetaType::Double)) {
         dst->format = MPV_FORMAT_DOUBLE;
         dst->u.double_ = src.toDouble();
     } else if (src.canConvert<QVariantList>()) {
         QVariantList qlist = src.toList();
-        mpv_node_list *list = create_list(dst, false, qlist.size());
+        mpv_node_list *list = createList(dst, false, qlist.size());
         if (!list) {
             dst->format = MPV_FORMAT_NONE;
             return;
@@ -72,7 +71,7 @@ void MpvControllerPrivate::setNode(mpv_node *dst, const QVariant &src)
         }
     } else if (src.canConvert<QVariantMap>()) {
         QVariantMap qmap = src.toMap();
-        mpv_node_list *list = create_list(dst, true, qmap.size());
+        mpv_node_list *list = createList(dst, true, qmap.size());
         if (!list) {
             dst->format = MPV_FORMAT_NONE;
             return;
@@ -82,7 +81,7 @@ void MpvControllerPrivate::setNode(mpv_node *dst, const QVariant &src)
         for (auto it = qmap.constKeyValueBegin(); it != qmap.constKeyValueEnd(); ++it) {
             list->keys[n] = qstrdup(it.operator*().first.toUtf8().data());
             if (!list->keys[n]) {
-                free_node(dst);
+                freeNode(dst);
                 dst->format = MPV_FORMAT_NONE;
                 return;
             }
@@ -95,7 +94,7 @@ void MpvControllerPrivate::setNode(mpv_node *dst, const QVariant &src)
     return;
 }
 
-bool MpvControllerPrivate::test_type(const QVariant &v, QMetaType::Type t)
+bool MpvControllerPrivate::testType(const QVariant &v, QMetaType::Type t)
 {
     // The Qt docs say: "Although this function is declared as returning
     // QVariant::Type(obsolete), the return value should be interpreted
@@ -107,7 +106,7 @@ bool MpvControllerPrivate::test_type(const QVariant &v, QMetaType::Type t)
 #endif
 }
 
-void MpvControllerPrivate::free_node(mpv_node *dst)
+void MpvControllerPrivate::freeNode(mpv_node *dst)
 {
     switch (dst->format) {
     case MPV_FORMAT_STRING:
@@ -122,7 +121,7 @@ void MpvControllerPrivate::free_node(mpv_node *dst)
                     delete[] list->keys[n];
                 }
                 if (list->values) {
-                    free_node(&list->values[n]);
+                    freeNode(&list->values[n]);
                 }
             }
             delete[] list->keys;
@@ -136,7 +135,7 @@ void MpvControllerPrivate::free_node(mpv_node *dst)
     dst->format = MPV_FORMAT_NONE;
 }
 
-inline QVariant MpvControllerPrivate::node_to_variant(const mpv_node *node)
+inline QVariant MpvControllerPrivate::nodeToVariant(const mpv_node *node)
 {
     switch (node->format) {
     case MPV_FORMAT_STRING:
@@ -151,7 +150,7 @@ inline QVariant MpvControllerPrivate::node_to_variant(const mpv_node *node)
         mpv_node_list *list = node->u.list;
         QVariantList qlist;
         for (int n = 0; n < list->num; ++n) {
-            qlist.append(node_to_variant(&list->values[n]));
+            qlist.append(nodeToVariant(&list->values[n]));
         }
         return QVariant(qlist);
     }
@@ -159,7 +158,7 @@ inline QVariant MpvControllerPrivate::node_to_variant(const mpv_node *node)
         mpv_node_list *list = node->u.list;
         QVariantMap qmap;
         for (int n = 0; n < list->num; ++n) {
-            qmap.insert(QString::fromUtf8(list->keys[n]), node_to_variant(&list->values[n]));
+            qmap.insert(QString::fromUtf8(list->keys[n]), nodeToVariant(&list->values[n]));
         }
         return QVariant(qmap);
     }
@@ -226,7 +225,7 @@ void MpvController::eventHandler()
 
         case MPV_EVENT_GET_PROPERTY_REPLY: {
             mpv_event_property *prop = static_cast<mpv_event_property *>(event->data);
-            auto data = d_ptr->node_to_variant(reinterpret_cast<mpv_node *>(prop->data));
+            auto data = d_ptr->nodeToVariant(reinterpret_cast<mpv_node *>(prop->data));
             Q_EMIT asyncReply(data.toString(), event->reply_userdata);
             break;
         }
@@ -238,7 +237,7 @@ void MpvController::eventHandler()
 
         case MPV_EVENT_COMMAND_REPLY: {
             mpv_event_property *prop = static_cast<mpv_event_property *>(event->data);
-            auto data = d_ptr->node_to_variant(reinterpret_cast<mpv_node *>(prop));
+            auto data = d_ptr->nodeToVariant(reinterpret_cast<mpv_node *>(prop));
             Q_EMIT asyncReply(data, event->reply_userdata);
             break;
         }
@@ -260,7 +259,7 @@ void MpvController::eventHandler()
                 data = *reinterpret_cast<bool *>(prop->data);
                 break;
             case MPV_FORMAT_NODE:
-                data = d_ptr->node_to_variant(reinterpret_cast<mpv_node *>(prop->data));
+                data = d_ptr->nodeToVariant(reinterpret_cast<mpv_node *>(prop->data));
                 break;
             }
             Q_EMIT propertyChanged(QString::fromStdString(prop->name), data);
@@ -298,7 +297,7 @@ QVariant MpvController::getProperty(const QString &property)
         return QVariant::fromValue(ErrorReturn(err));
     }
     node_autofree f(&node);
-    return d_ptr->node_to_variant(&node);
+    return d_ptr->nodeToVariant(&node);
 }
 
 int MpvController::getPropertyAsync(const QString &property, int id)
@@ -318,7 +317,7 @@ QVariant MpvController::command(const QVariant &params)
         return QVariant::fromValue(ErrorReturn(err));
     }
     node_autofree f(&result);
-    return d_ptr->node_to_variant(&result);
+    return d_ptr->nodeToVariant(&result);
 }
 
 int MpvController::commandAsync(const QVariant &params, int id)
