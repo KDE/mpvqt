@@ -9,16 +9,15 @@
 #include <MpvController>
 
 #include "mpvproperties.h"
-#include <mpvabstractitem_p.h>
 
 MpvItem::MpvItem(QQuickItem *parent)
     : MpvAbstractItem(parent)
 {
-    d_ptr->observeProperty(MpvProperties::self()->MediaTitle, MPV_FORMAT_STRING);
-    d_ptr->observeProperty(MpvProperties::self()->Position, MPV_FORMAT_DOUBLE);
-    d_ptr->observeProperty(MpvProperties::self()->Duration, MPV_FORMAT_DOUBLE);
-    d_ptr->observeProperty(MpvProperties::self()->Pause, MPV_FORMAT_FLAG);
-    d_ptr->observeProperty(MpvProperties::self()->Volume, MPV_FORMAT_INT64);
+    observeProperty(MpvProperties::self()->MediaTitle, MPV_FORMAT_STRING);
+    observeProperty(MpvProperties::self()->Position, MPV_FORMAT_DOUBLE);
+    observeProperty(MpvProperties::self()->Duration, MPV_FORMAT_DOUBLE);
+    observeProperty(MpvProperties::self()->Pause, MPV_FORMAT_FLAG);
+    observeProperty(MpvProperties::self()->Volume, MPV_FORMAT_INT64);
 
     setupConnections();
 
@@ -37,22 +36,22 @@ MpvItem::MpvItem(QQuickItem *parent)
 void MpvItem::setupConnections()
 {
     // clang-format off
-    connect(d_ptr->m_mpvController, &MpvController::propertyChanged,
+    connect(mpvController(), &MpvController::propertyChanged,
             this, &MpvItem::onPropertyChanged, Qt::QueuedConnection);
 
-    connect(d_ptr->m_mpvController, &MpvController::fileStarted,
+    connect(mpvController(), &MpvController::fileStarted,
             this, &MpvItem::fileStarted, Qt::QueuedConnection);
 
-    connect(d_ptr->m_mpvController, &MpvController::fileLoaded,
+    connect(mpvController(), &MpvController::fileLoaded,
             this, &MpvItem::fileLoaded, Qt::QueuedConnection);
 
-    connect(d_ptr->m_mpvController, &MpvController::endFile,
+    connect(mpvController(), &MpvController::endFile,
             this, &MpvItem::endFile, Qt::QueuedConnection);
 
-    connect(d_ptr->m_mpvController, &MpvController::videoReconfig,
+    connect(mpvController(), &MpvController::videoReconfig,
             this, &MpvItem::videoReconfig, Qt::QueuedConnection);
 
-    connect(d_ptr->m_mpvController, &MpvController::asyncReply,
+    connect(mpvController(), &MpvController::asyncReply,
             this, &MpvItem::onAsyncReply, Qt::QueuedConnection);
     // clang-format on
 }
@@ -60,25 +59,25 @@ void MpvItem::setupConnections()
 void MpvItem::onPropertyChanged(const QString &property, const QVariant &value)
 {
     if (property == MpvProperties::self()->MediaTitle) {
-        d_ptr->cachePropertyValue(property, value);
+        cachePropertyValue(property, value);
         Q_EMIT mediaTitleChanged();
 
     } else if (property == MpvProperties::self()->Position) {
-        d_ptr->cachePropertyValue(property, value);
+        cachePropertyValue(property, value);
         m_formattedPosition = formatTime(value.toDouble());
         Q_EMIT positionChanged();
 
     } else if (property == MpvProperties::self()->Duration) {
-        d_ptr->cachePropertyValue(property, value);
+        cachePropertyValue(property, value);
         m_formattedDuration = formatTime(value.toDouble());
         Q_EMIT durationChanged();
 
     } else if (property == MpvProperties::self()->Pause) {
-        d_ptr->cachePropertyValue(property, value);
+        cachePropertyValue(property, value);
         Q_EMIT pauseChanged();
 
     } else if (property == MpvProperties::self()->Volume) {
-        d_ptr->cachePropertyValue(property, value);
+        cachePropertyValue(property, value);
         Q_EMIT volumeChanged();
 
     }

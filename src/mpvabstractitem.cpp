@@ -58,6 +58,21 @@ QQuickFramebufferObject::Renderer *MpvAbstractItem::createRenderer() const
     return new MpvRenderer(const_cast<MpvAbstractItem *>(this));
 }
 
+void MpvAbstractItem::observeProperty(const QString &property, mpv_format format, int id)
+{
+    d_ptr->observeProperty(property, format, id);
+}
+
+void MpvAbstractItem::cachePropertyValue(const QString &property, const QVariant &value)
+{
+    d_ptr->cachePropertyValue(property, value);
+}
+
+MpvController *MpvAbstractItem::mpvController()
+{
+    return d_ptr->m_mpvController;
+}
+
 int MpvAbstractItem::setProperty(const QString &property, const QVariant &value)
 {
     return d_ptr->m_mpvController->setProperty(property, value);
