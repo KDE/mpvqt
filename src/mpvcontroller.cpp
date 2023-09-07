@@ -261,10 +261,30 @@ void MpvController::eventHandler()
             case MPV_FORMAT_NODE:
                 data = d_ptr->nodeToVariant(reinterpret_cast<mpv_node *>(prop->data));
                 break;
+            case MPV_FORMAT_NONE:
+            case MPV_FORMAT_OSD_STRING:
+            case MPV_FORMAT_NODE_ARRAY:
+            case MPV_FORMAT_NODE_MAP:
+            case MPV_FORMAT_BYTE_ARRAY:
+                break;
             }
             Q_EMIT propertyChanged(QString::fromStdString(prop->name), data);
             break;
         }
+        case MPV_EVENT_NONE:
+        case MPV_EVENT_SHUTDOWN:
+        case MPV_EVENT_LOG_MESSAGE:
+        case MPV_EVENT_CLIENT_MESSAGE:
+        case MPV_EVENT_AUDIO_RECONFIG:
+        case MPV_EVENT_SEEK:
+        case MPV_EVENT_PLAYBACK_RESTART:
+        case MPV_EVENT_QUEUE_OVERFLOW:
+        case MPV_EVENT_HOOK:
+#if MPV_ENABLE_DEPRECATED
+        case MPV_EVENT_IDLE:
+        case MPV_EVENT_TICK:
+#endif
+            break;
         }
     }
 }
