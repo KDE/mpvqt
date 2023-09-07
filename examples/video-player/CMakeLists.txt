@@ -38,3 +38,5 @@ target_link_libraries(videoplayer
         Qt${QT_VERSION_MAJOR}::Quick
         MpvQt::MpvQt
 )
+
+install(TARGETS videoplayer DESTINATION ${KDE_INSTALL_TARGETS_DEFAULT_ARGS})
