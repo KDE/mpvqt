@@ -14,7 +14,7 @@
 #include <QOpenGLFramebufferObject>
 #include <QQuickWindow>
 
-#if defined(Q_OS_UNIX) && !defined(Q_OS_DARWIN) && QT_VERSION < QT_VERSION_CHECK(6, 0, 0)
+#if defined(Q_OS_UNIX) && !defined(Q_OS_DARWIN) && !defined(Q_OS_ANDROID) && QT_VERSION < QT_VERSION_CHECK(6, 0, 0)
 #include <QtX11Extras/QX11Info>
 #include <qpa/qplatformnativeinterface.h>
 #endif
@@ -91,7 +91,7 @@ QOpenGLFramebufferObject *MpvRenderer::createFramebufferObject(const QSize &size
 #endif
 
         mpv_render_param display{MPV_RENDER_PARAM_INVALID, nullptr};
-#if defined(Q_OS_UNIX) && !defined(Q_OS_DARWIN)
+#if defined(Q_OS_UNIX) && !defined(Q_OS_DARWIN) && !defined(Q_OS_ANDROID)
 #if QT_VERSION < QT_VERSION_CHECK(6, 0, 0)
         if (QX11Info::isPlatformX11()) {
             display.type = MPV_RENDER_PARAM_X11_DISPLAY;

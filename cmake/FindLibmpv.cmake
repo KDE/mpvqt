@@ -67,6 +67,10 @@ if (Libmpv_FOUND AND NOT TARGET Libmpv::Libmpv)
         IMPORTED_LOCATION "${Libmpv_LIBRARIES}"
         INTERFACE_INCLUDE_DIRECTORIES "${Libmpv_INCLUDE_DIRS}"
     )
+    # TODO: we should eventually use pkg_check_module to create a target
+    if (ANDROID)
+        target_link_libraries(Libmpv::Libmpv INTERFACE ${PC_MPV_LINK_LIBRARIES})
+    endif()
 endif()
 
 mark_as_advanced(Libmpv_LIBRARIES Libmpv_INCLUDE_DIRS)
