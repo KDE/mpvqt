@@ -32,7 +32,7 @@ target_include_directories(MpvQt
 )
 
 target_link_libraries(MpvQt
-    PRIVATE
+    PUBLIC
         Qt${QT_MAJOR_VERSION}::Quick
         Libmpv::Libmpv
 )
