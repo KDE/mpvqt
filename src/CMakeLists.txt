@@ -63,6 +63,7 @@ install(FILES
 install(FILES
     "${PROJECT_BINARY_DIR}/MpvQtConfig.cmake"
     "${PROJECT_BINARY_DIR}/MpvQtConfigVersion.cmake"
+    "${CMAKE_SOURCE_DIR}/cmake/FindLibmpv.cmake"
     DESTINATION "${CMAKECONFIG_INSTALL_DIR}"
     COMPONENT Devel
 )
