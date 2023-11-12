@@ -16,7 +16,6 @@ if(NOT @BUILD_SHARED_LIBS@)
         find_dependency(Qt5X11Extras)
     endif()
 
-    find_dependency(FFmpeg)
     find_dependency(Libmpv)
 endif()
 
