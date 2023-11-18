@@ -62,12 +62,6 @@ find_package(Libmpv)
 set_package_properties(Libmpv PROPERTIES TYPE REQUIRED
     URL "https://mpv.io")
 
-find_package(YouTubeDl)
-set_package_properties(YouTubeDl PROPERTIES TYPE RUNTIME)
-
-find_package(Ytdlp)
-set_package_properties(Ytdlp PROPERTIES TYPE RUNTIME)
-
 #
 # END FIND PACKAGES
 #
