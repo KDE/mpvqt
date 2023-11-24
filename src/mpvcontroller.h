@@ -138,7 +138,7 @@ public:
 
 Q_SIGNALS:
     void propertyChanged(const QString &property, const QVariant &value);
-    void asyncReply(const QVariant &value, int id);
+    void asyncReply(const QVariant &data, mpv_event *event);
     void fileStarted();
     void fileLoaded();
     void endFile(QString reason);

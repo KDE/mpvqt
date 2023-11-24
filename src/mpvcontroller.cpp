@@ -226,19 +226,19 @@ void MpvController::eventHandler()
         case MPV_EVENT_GET_PROPERTY_REPLY: {
             mpv_event_property *prop = static_cast<mpv_event_property *>(event->data);
             auto data = d_ptr->nodeToVariant(reinterpret_cast<mpv_node *>(prop->data));
-            Q_EMIT asyncReply(data.toString(), event->reply_userdata);
+            Q_EMIT asyncReply(data.toString(), std::move(new mpv_event(*event)));
             break;
         }
 
         case MPV_EVENT_SET_PROPERTY_REPLY: {
-            Q_EMIT asyncReply(QVariant(), event->reply_userdata);
+            Q_EMIT asyncReply(QVariant(), std::move(new mpv_event(*event)));
             break;
         }
 
         case MPV_EVENT_COMMAND_REPLY: {
             mpv_event_property *prop = static_cast<mpv_event_property *>(event->data);
             auto data = d_ptr->nodeToVariant(reinterpret_cast<mpv_node *>(prop));
-            Q_EMIT asyncReply(data, event->reply_userdata);
+            Q_EMIT asyncReply(data, std::move(new mpv_event(*event)));
             break;
         }
 
