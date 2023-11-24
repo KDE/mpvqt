@@ -83,22 +83,22 @@ void MpvItem::onPropertyChanged(const QString &property, const QVariant &value)
     }
 }
 
-void MpvItem::onAsyncReply(const QVariant &data, int id)
+void MpvItem::onAsyncReply(const QVariant &data, mpv_event *event)
 {
-    switch (static_cast<AsyncIds>(id)) {
+    switch (static_cast<AsyncIds>(event->reply_userdata)) {
     case AsyncIds::None: {
         break;
     }
     case AsyncIds::SetVolume: {
-        qDebug() << "onSetPropertyReply" << id;
+        qDebug() << "onSetPropertyReply" << event->reply_userdata;
         break;
     }
     case AsyncIds::GetVolume: {
-        qDebug() << "onGetPropertyReply" << id << data;
+        qDebug() << "onGetPropertyReply" << event->reply_userdata << data;
         break;
     }
     case AsyncIds::ExpandText: {
-        qDebug() << "onGetPropertyReply" << id << data;
+        qDebug() << "onGetPropertyReply" << event->reply_userdata << data;
         break;
     }
     }

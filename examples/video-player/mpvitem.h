@@ -71,7 +71,7 @@ Q_SIGNALS:
 private:
     void setupConnections();
     void onPropertyChanged(const QString &property, const QVariant &value);
-    void onAsyncReply(const QVariant &data, int id);
+    void onAsyncReply(const QVariant &data, mpv_event *event);
     QString formatTime(const double time);
 
     double m_position{0.0};
