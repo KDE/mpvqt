@@ -102,6 +102,7 @@ void MpvItem::onAsyncReply(const QVariant &data, mpv_event *event)
         break;
     }
     }
+    delete event;
 }
 
 QString MpvItem::formatTime(const double time)
