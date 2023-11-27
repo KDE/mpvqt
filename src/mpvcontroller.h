@@ -145,7 +145,6 @@ Q_SIGNALS:
     void videoReconfig();
 
 private:
-    MpvController(MpvControllerPrivate &d);
     std::unique_ptr<MpvControllerPrivate> d_ptr;
 };
 
