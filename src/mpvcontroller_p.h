@@ -11,7 +11,6 @@ class MpvControllerPrivate
 {
 public:
     MpvControllerPrivate(MpvController *q);
-    MpvController *q_ptr;
 
     mpv_node_list *createList(mpv_node *dst, bool is_map, int num);
     void setNode(mpv_node *dst, const QVariant &src);
@@ -19,6 +18,7 @@ public:
     void freeNode(mpv_node *dst);
     QVariant nodeToVariant(const mpv_node *node);
 
+    MpvController *q_ptr;
     mpv_handle *m_mpv{nullptr};
 };
 

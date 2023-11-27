@@ -39,10 +39,11 @@ Q_SIGNALS:
     void ready();
 
 protected:
-    std::unique_ptr<MpvAbstractItemPrivate> d_ptr;
     void observeProperty(const QString &property, mpv_format format, int id = 0);
     void cachePropertyValue(const QString &property, const QVariant &value);
     MpvController *mpvController();
+
+    std::unique_ptr<MpvAbstractItemPrivate> d_ptr;
 };
 
 #endif // MPVABSTRACTITEM_H
