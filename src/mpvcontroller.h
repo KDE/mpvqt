@@ -63,7 +63,7 @@ class MPVQT_EXPORT MpvController : public QObject
 {
     Q_OBJECT
 public:
-    MpvController(QObject *parent = nullptr);
+    explicit MpvController(QObject *parent = nullptr);
 
     /**
      * Set the given property as mpv_node converted from the QVariant argument.

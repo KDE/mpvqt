@@ -12,7 +12,7 @@
 class MpvAbstractItemPrivate
 {
 public:
-    MpvAbstractItemPrivate(MpvAbstractItem *q);
+    explicit MpvAbstractItemPrivate(MpvAbstractItem *q);
 
     void observeProperty(const QString &property, mpv_format format, int id = 0);
     void cachePropertyValue(const QString &property, const QVariant &value);

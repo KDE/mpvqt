@@ -20,7 +20,7 @@ class MPVQT_EXPORT MpvAbstractItem : public QQuickFramebufferObject
 {
     Q_OBJECT
 public:
-    MpvAbstractItem(QQuickItem *parent = nullptr);
+    explicit MpvAbstractItem(QQuickItem *parent = nullptr);
     ~MpvAbstractItem();
 
     Renderer *createRenderer() const override;

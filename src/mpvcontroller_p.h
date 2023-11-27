@@ -12,7 +12,7 @@
 class MpvControllerPrivate
 {
 public:
-    MpvControllerPrivate(MpvController *q);
+    explicit MpvControllerPrivate(MpvController *q);
 
     mpv_node_list *createList(mpv_node *dst, bool is_map, int num);
     void setNode(mpv_node *dst, const QVariant &src);
