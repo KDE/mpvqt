@@ -7,6 +7,8 @@
 #ifndef MPVCONTROLLER_P_H_INCLUDED
 #define MPVCONTROLLER_P_H_INCLUDED
 
+#include "mpvcontroller.h"
+
 class MpvControllerPrivate
 {
 public:

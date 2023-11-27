@@ -7,6 +7,8 @@
 #ifndef MPVABSTRACTITEM_P_H_INCLUDED
 #define MPVABSTRACTITEM_P_H_INCLUDED
 
+#include "mpvabstractitem.h"
+
 class MpvAbstractItemPrivate
 {
 public:
