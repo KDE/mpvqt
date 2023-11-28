@@ -138,7 +138,7 @@ public:
 
 Q_SIGNALS:
     void propertyChanged(const QString &property, const QVariant &value);
-    void asyncReply(const QVariant &data, mpv_event *event);
+    void asyncReply(const QVariant &data, mpv_event event);
     void fileStarted();
     void fileLoaded();
     void endFile(QString reason);
@@ -148,4 +148,5 @@ private:
     std::unique_ptr<MpvControllerPrivate> d_ptr;
 };
 
+Q_DECLARE_METATYPE(mpv_event)
 #endif // MPVCONTROLLER_H

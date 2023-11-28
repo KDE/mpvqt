@@ -83,26 +83,25 @@ void MpvItem::onPropertyChanged(const QString &property, const QVariant &value)
     }
 }
 
-void MpvItem::onAsyncReply(const QVariant &data, mpv_event *event)
+void MpvItem::onAsyncReply(const QVariant &data, mpv_event event)
 {
-    switch (static_cast<AsyncIds>(event->reply_userdata)) {
+    switch (static_cast<AsyncIds>(event.reply_userdata)) {
     case AsyncIds::None: {
         break;
     }
     case AsyncIds::SetVolume: {
-        qDebug() << "onSetPropertyReply" << event->reply_userdata;
+        qDebug() << "onSetPropertyReply" << event.reply_userdata;
         break;
     }
     case AsyncIds::GetVolume: {
-        qDebug() << "onGetPropertyReply" << event->reply_userdata << data;
+        qDebug() << "onGetPropertyReply" << event.reply_userdata << data;
         break;
     }
     case AsyncIds::ExpandText: {
-        qDebug() << "onGetPropertyReply" << event->reply_userdata << data;
+        qDebug() << "onGetPropertyReply" << event.reply_userdata << data;
         break;
     }
     }
-    delete event;
 }
 
 QString MpvItem::formatTime(const double time)
