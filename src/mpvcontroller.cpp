@@ -117,7 +117,7 @@ void MpvControllerPrivate::freeNode(mpv_node *dst)
         mpv_node_list *list = dst->u.list;
         if (list) {
             for (int n = 0; n < list->num; ++n) {
-                if (list->keys && list->keys[n] != nullptr) {
+                if (list->keys) {
                     delete[] list->keys[n];
                 }
                 if (list->values) {
