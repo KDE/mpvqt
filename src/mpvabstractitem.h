@@ -28,7 +28,6 @@ public:
     Q_INVOKABLE int setPropertyAsync(const QString &property, const QVariant &value, int id = 0);
     Q_INVOKABLE QVariant getProperty(const QString &property);
     Q_INVOKABLE int getPropertyAsync(const QString &property, int id = 0);
-    Q_INVOKABLE QVariant getCachedPropertyValue(const QString &property);
     Q_INVOKABLE QVariant command(const QStringList &params);
     Q_INVOKABLE int commandAsync(const QStringList &params, int id = 0);
     Q_INVOKABLE QVariant expandText(const QString &text);
@@ -40,7 +39,6 @@ Q_SIGNALS:
 
 protected:
     void observeProperty(const QString &property, mpv_format format, int id = 0);
-    void cachePropertyValue(const QString &property, const QVariant &value);
     MpvController *mpvController();
 
     std::unique_ptr<MpvAbstractItemPrivate> d_ptr;

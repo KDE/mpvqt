@@ -22,11 +22,6 @@ void MpvAbstractItemPrivate::observeProperty(const QString &property, mpv_format
     mpv_observe_property(m_mpv, id, property.toUtf8().data(), format);
 }
 
-void MpvAbstractItemPrivate::cachePropertyValue(const QString &property, const QVariant &value)
-{
-    m_propertiesCache[property] = value;
-}
-
 MpvAbstractItem::MpvAbstractItem(QQuickItem *parent)
     : QQuickFramebufferObject(parent)
     , d_ptr{std::make_unique<MpvAbstractItemPrivate>(this)}
@@ -63,11 +58,6 @@ void MpvAbstractItem::observeProperty(const QString &property, mpv_format format
     d_ptr->observeProperty(property, format, id);
 }
 
-void MpvAbstractItem::cachePropertyValue(const QString &property, const QVariant &value)
-{
-    d_ptr->cachePropertyValue(property, value);
-}
-
 MpvController *MpvAbstractItem::mpvController()
 {
     return d_ptr->m_mpvController;
@@ -96,16 +86,6 @@ int MpvAbstractItem::getPropertyAsync(const QString &property, int id)
 QVariant MpvAbstractItem::expandText(const QString &text)
 {
     return d_ptr->m_mpvController->command(QStringList{QStringLiteral("expand-text"), text});
-}
-
-QVariant MpvAbstractItem::getCachedPropertyValue(const QString &property)
-{
-    if (!d_ptr->m_propertiesCache[property].isValid()) {
-        auto value = getProperty(property);
-        d_ptr->cachePropertyValue(property, value);
-        return value;
-    }
-    return d_ptr->m_propertiesCache[property];
 }
 
 QVariant MpvAbstractItem::command(const QStringList &params)
