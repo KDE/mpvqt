@@ -28,22 +28,13 @@ ecm_generate_export_header(MpvQt
 
 target_include_directories(MpvQt
     INTERFACE "$<INSTALL_INTERFACE:${KDE_INSTALL_INCLUDEDIR}/MpvQt>"
-    PRIVATE ${Qt5Gui_PRIVATE_INCLUDE_DIRS}
 )
 
 target_link_libraries(MpvQt
     PUBLIC
-        Qt${QT_MAJOR_VERSION}::Quick
+        Qt6::Quick
         Libmpv::Libmpv
 )
-
-if (CMAKE_SYSTEM_NAME IN_LIST X11_PLATFORMS)
-    if (QT_MAJOR_VERSION STREQUAL "5")
-        target_link_libraries(MpvQt PRIVATE
-            Qt5::X11Extras
-        )
-    endif ()
-endif ()
 
 ecm_generate_headers(MpvQt_HEADERS
     HEADER_NAMES MpvAbstractItem

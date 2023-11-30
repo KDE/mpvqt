@@ -4,15 +4,16 @@
  * SPDX-License-Identifier: MIT
  */
 
-import QtQuick 2.15
-import QtQuick.Window 2.15
-import QtQuick.Dialogs 1.0
+import QtCore
+import QtQuick
+import QtQuick.Window
+import QtQuick.Dialogs
 
-import com.example.mpv 1.0
+import com.example.mpv
 
 Window {
-    width: 720
-    height: 410
+    width: 1000
+    height: 600
     visible: true
     title: mpv.mediaTitle || "press f key to select a file"
 
@@ -62,9 +63,9 @@ Window {
         id: fileDialog
 
         title: "Select file"
-        folder: shortcuts.movies
+        currentFolder: StandardPaths.standardLocations(StandardPaths.MoviesLocation)[0]
         onAccepted: {
-            mpv.loadFile(fileDialog.fileUrls[0])
+            mpv.loadFile(selectedFile)
         }
     }
 }

@@ -17,8 +17,8 @@ set(CMAKE_AUTORCC ON)
 set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
-find_package(QT NAMES Qt6 Qt5 COMPONENTS Core Quick REQUIRED)
-find_package(Qt${QT_MAJOR_VERSION} COMPONENTS Core Quick REQUIRED)
+find_package(QT NAMES Qt6 COMPONENTS Core Quick REQUIRED)
+find_package(Qt6 COMPONENTS Core Quick REQUIRED)
 
 find_package(MpvQt)
 
@@ -34,8 +34,8 @@ target_sources(videoplayer
 
 target_link_libraries(videoplayer
     PRIVATE
-        Qt${QT_MAJOR_VERSION}::Core
-        Qt${QT_MAJOR_VERSION}::Quick
+        Qt6::Core
+        Qt6::Quick
         MpvQt::MpvQt
 )
 
