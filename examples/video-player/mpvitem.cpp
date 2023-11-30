@@ -59,27 +59,21 @@ void MpvItem::setupConnections()
 void MpvItem::onPropertyChanged(const QString &property, const QVariant &value)
 {
     if (property == MpvProperties::self()->MediaTitle) {
-        cachePropertyValue(property, value);
         Q_EMIT mediaTitleChanged();
 
     } else if (property == MpvProperties::self()->Position) {
-        cachePropertyValue(property, value);
         m_formattedPosition = formatTime(value.toDouble());
         Q_EMIT positionChanged();
 
     } else if (property == MpvProperties::self()->Duration) {
-        cachePropertyValue(property, value);
         m_formattedDuration = formatTime(value.toDouble());
         Q_EMIT durationChanged();
 
     } else if (property == MpvProperties::self()->Pause) {
-        cachePropertyValue(property, value);
         Q_EMIT pauseChanged();
 
     } else if (property == MpvProperties::self()->Volume) {
-        cachePropertyValue(property, value);
         Q_EMIT volumeChanged();
-
     }
 }
 
@@ -130,12 +124,12 @@ void MpvItem::loadFile(const QString &file)
 
 QString MpvItem::mediaTitle()
 {
-    return getCachedPropertyValue(MpvProperties::self()->MediaTitle).toString();
+    return getProperty(MpvProperties::self()->MediaTitle).toString();
 }
 
 double MpvItem::position()
 {
-    return getCachedPropertyValue(MpvProperties::self()->Position).toDouble();
+    return getProperty(MpvProperties::self()->Position).toDouble();
 }
 
 void MpvItem::setPosition(double value)
@@ -148,12 +142,12 @@ void MpvItem::setPosition(double value)
 
 double MpvItem::duration()
 {
-    return getCachedPropertyValue(MpvProperties::self()->Duration).toDouble();
+    return getProperty(MpvProperties::self()->Duration).toDouble();
 }
 
 bool MpvItem::pause()
 {
-    return getCachedPropertyValue(MpvProperties::self()->Pause).toBool();
+    return getProperty(MpvProperties::self()->Pause).toBool();
 }
 
 void MpvItem::setPause(bool value)
@@ -166,7 +160,7 @@ void MpvItem::setPause(bool value)
 
 int MpvItem::volume()
 {
-    return getCachedPropertyValue(MpvProperties::self()->Volume).toInt();
+    return getProperty(MpvProperties::self()->Volume).toInt();
 }
 
 void MpvItem::setVolume(int value)
