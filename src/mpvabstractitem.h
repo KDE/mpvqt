@@ -26,7 +26,7 @@ public:
     Renderer *createRenderer() const override;
     Q_INVOKABLE int setPropertyAsync(const QString &property, const QVariant &value, int id = 0);
     Q_INVOKABLE QVariant getProperty(const QString &property);
-    Q_INVOKABLE int getPropertyAsync(const QString &property, int id = 0);
+    Q_INVOKABLE void getPropertyAsync(const QString &property, int id = 0);
     Q_INVOKABLE QVariant commandBlocking(const QVariant &params);
     Q_INVOKABLE int commandAsync(const QStringList &params, int id = 0);
     Q_INVOKABLE QVariant expandText(const QString &text);

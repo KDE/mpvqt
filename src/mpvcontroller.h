@@ -115,7 +115,7 @@ public:
      * @param `id` used to associate requests with replies
      * @return error code if sending the request failed
      */
-    int getPropertyAsync(const QString &property, int id = 0);
+    Q_SLOT int getPropertyAsync(const QString &property, int id = 0);
 
     /**
      * mpv_command_node() equivalent.

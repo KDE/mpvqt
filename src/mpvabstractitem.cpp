@@ -70,9 +70,9 @@ QVariant MpvAbstractItem::getProperty(const QString &property)
     return value;
 }
 
-int MpvAbstractItem::getPropertyAsync(const QString &property, int id)
+void MpvAbstractItem::getPropertyAsync(const QString &property, int id)
 {
-    return d_ptr->m_mpvController->getPropertyAsync(property, id);
+    QMetaObject::invokeMethod(d_ptr->m_mpvController, "getPropertyAsync", Qt::QueuedConnection, Q_ARG(QString, property), Q_ARG(int, id));
 }
 
 QVariant MpvAbstractItem::expandText(const QString &text)
