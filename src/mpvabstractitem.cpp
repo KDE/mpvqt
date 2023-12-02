@@ -30,6 +30,7 @@ MpvAbstractItem::MpvAbstractItem(QQuickItem *parent)
     d_ptr->m_mpvController = new MpvController;
     d_ptr->m_workerThread->start();
     d_ptr->m_mpvController->moveToThread(d_ptr->m_workerThread);
+    QMetaObject::invokeMethod(d_ptr->m_mpvController, "init", Qt::BlockingQueuedConnection);
     d_ptr->m_mpv = d_ptr->m_mpvController->mpv();
 
     connect(d_ptr->m_workerThread, &QThread::finished, d_ptr->m_mpvController, &MpvController::deleteLater);

@@ -169,8 +169,12 @@ inline QVariant MpvControllerPrivate::nodeToVariant(const mpv_node *node)
 
 MpvController::MpvController(QObject *parent)
     : QObject(parent)
-    , d_ptr{std::make_unique<MpvControllerPrivate>(this)}
 {
+}
+
+void MpvController::init()
+{
+    d_ptr = std::make_unique<MpvControllerPrivate>(this);
     // Qt sets the locale in the QGuiApplication constructor, but libmpv
     // requires the LC_NUMERIC category to be set to "C", so change it back.
     std::setlocale(LC_NUMERIC, "C");

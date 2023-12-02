@@ -136,6 +136,9 @@ public:
     void eventHandler();
     mpv_handle *mpv() const;
 
+public Q_SLOTS:
+    void init();
+
 Q_SIGNALS:
     void propertyChanged(const QString &property, const QVariant &value);
     void asyncReply(const QVariant &data, mpv_event event);
