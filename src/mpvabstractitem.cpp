@@ -86,6 +86,13 @@ QVariant MpvAbstractItem::expandText(const QString &text)
     return value;
 }
 
+QVariant MpvAbstractItem::commandBlocking(const QVariant &params)
+{
+    QVariant value;
+    QMetaObject::invokeMethod(d_ptr->m_mpvController, "command", Qt::BlockingQueuedConnection, Q_RETURN_ARG(QVariant, value), Q_ARG(QVariant, params));
+    return value;
+}
+
 int MpvAbstractItem::commandAsync(const QStringList &params, int id)
 {
     return d_ptr->m_mpvController->commandAsync(params, id);
