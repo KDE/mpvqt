@@ -57,9 +57,14 @@ MpvController *MpvAbstractItem::mpvController()
     return d_ptr->m_mpvController;
 }
 
-int MpvAbstractItem::setPropertyAsync(const QString &property, const QVariant &value, int id)
+void MpvAbstractItem::setPropertyAsync(const QString &property, const QVariant &value, int id)
 {
-    return d_ptr->m_mpvController->setPropertyAsync(property, value, id);
+    QMetaObject::invokeMethod(d_ptr->m_mpvController,
+                              "setPropertyAsync",
+                              Qt::QueuedConnection,
+                              Q_ARG(QString, property),
+                              Q_ARG(QVariant, value),
+                              Q_ARG(int, id));
 }
 
 QVariant MpvAbstractItem::getProperty(const QString &property)
@@ -75,17 +80,6 @@ void MpvAbstractItem::getPropertyAsync(const QString &property, int id)
     QMetaObject::invokeMethod(d_ptr->m_mpvController, "getPropertyAsync", Qt::QueuedConnection, Q_ARG(QString, property), Q_ARG(int, id));
 }
 
-QVariant MpvAbstractItem::expandText(const QString &text)
-{
-    QVariant value;
-    QMetaObject::invokeMethod(d_ptr->m_mpvController,
-                              "command",
-                              Qt::BlockingQueuedConnection,
-                              Q_RETURN_ARG(QVariant, value),
-                              Q_ARG(QVariant, QVariant::fromValue(QStringList{QStringLiteral("expand-text"), text})));
-    return value;
-}
-
 QVariant MpvAbstractItem::commandBlocking(const QVariant &params)
 {
     QVariant value;
@@ -96,6 +90,17 @@ QVariant MpvAbstractItem::commandBlocking(const QVariant &params)
 void MpvAbstractItem::commandAsync(const QStringList &params, int id)
 {
     QMetaObject::invokeMethod(d_ptr->m_mpvController, "commandAsync", Qt::QueuedConnection, Q_ARG(QVariant, params), Q_ARG(int, id));
+}
+
+QVariant MpvAbstractItem::expandText(const QString &text)
+{
+    QVariant value;
+    QMetaObject::invokeMethod(d_ptr->m_mpvController,
+                              "command",
+                              Qt::BlockingQueuedConnection,
+                              Q_RETURN_ARG(QVariant, value),
+                              Q_ARG(QVariant, QVariant::fromValue(QStringList{QStringLiteral("expand-text"), text})));
+    return value;
 }
 
 #include "moc_mpvabstractitem.cpp"

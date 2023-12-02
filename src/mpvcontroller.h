@@ -66,6 +66,18 @@ public:
     explicit MpvController(QObject *parent = nullptr);
 
     /**
+     * Return an error string from an ErrorReturn.
+     */
+    QString getError(int error);
+
+    static void mpvEvents(void *ctx);
+    void eventHandler();
+    mpv_handle *mpv() const;
+
+public Q_SLOTS:
+    void init();
+
+    /**
      * Get a notification whenever the given property changes. You will receive
      * updates as MPV_EVENT_PROPERTY_CHANGE.
      *
@@ -103,7 +115,7 @@ public:
      * @param `property` the name of the property
      * @return the property value, or an ErrorReturn with the error code
      */
-    Q_SLOT QVariant getProperty(const QString &property);
+    QVariant getProperty(const QString &property);
 
     /**
      * Get a property asynchronously. The result of the operation as well
@@ -115,7 +127,7 @@ public:
      * @param `id` used to associate requests with replies
      * @return error code if sending the request failed
      */
-    Q_SLOT int getPropertyAsync(const QString &property, int id = 0);
+    int getPropertyAsync(const QString &property, int id = 0);
 
     /**
      * mpv_command_node() equivalent.
@@ -123,7 +135,7 @@ public:
      * @param `params` command arguments, with args[0] being the command name as string
      * @return the property value, or an ErrorReturn with the error code
      */
-    Q_SLOT QVariant command(const QVariant &params);
+    QVariant command(const QVariant &params);
 
     /**
      * Run commands asynchronously. The result of the operation as well
@@ -135,19 +147,7 @@ public:
      * @param `id` used to associate requests with replies
      * @return error code (if parsing or queuing the command fails)
      */
-    Q_SLOT int commandAsync(const QVariant &params, int id = 0);
-
-    /**
-     * Return an error string from an ErrorReturn.
-     */
-    QString getError(int error);
-
-    static void mpvEvents(void *ctx);
-    void eventHandler();
-    mpv_handle *mpv() const;
-
-public Q_SLOTS:
-    void init();
+    int commandAsync(const QVariant &params, int id = 0);
 
 Q_SIGNALS:
     void propertyChanged(const QString &property, const QVariant &value);
