@@ -65,6 +65,14 @@ class MPVQT_EXPORT MpvController : public QObject
 public:
     explicit MpvController(QObject *parent = nullptr);
 
+    /**
+     * Get a notification whenever the given property changes. You will receive
+     * updates as MPV_EVENT_PROPERTY_CHANGE.
+     *
+     * @param name The property name.
+     * @param format see enum mpv_format. Can be MPV_FORMAT_NONE to omit values
+     *               from the change events.
+     */
     void observeProperty(const QString &property, mpv_format format);
 
     /**
@@ -95,7 +103,7 @@ public:
      * @param `property` the name of the property
      * @return the property value, or an ErrorReturn with the error code
      */
-    QVariant getProperty(const QString &property);
+    Q_SLOT QVariant getProperty(const QString &property);
 
     /**
      * Get a property asynchronously. The result of the operation as well
@@ -115,7 +123,7 @@ public:
      * @param `params` command arguments, with args[0] being the command name as string
      * @return the property value, or an ErrorReturn with the error code
      */
-    QVariant command(const QVariant &params);
+    Q_SLOT QVariant command(const QVariant &params);
 
     /**
      * Run commands asynchronously. The result of the operation as well

@@ -64,7 +64,10 @@ int MpvAbstractItem::setPropertyAsync(const QString &property, const QVariant &v
 
 QVariant MpvAbstractItem::getProperty(const QString &property)
 {
-    return d_ptr->m_mpvController->getProperty(property);
+    QVariant value;
+    QMetaObject::invokeMethod(d_ptr->m_mpvController, "getProperty", Qt::BlockingQueuedConnection, Q_RETURN_ARG(QVariant, value), Q_ARG(QString, property));
+
+    return value;
 }
 
 int MpvAbstractItem::getPropertyAsync(const QString &property, int id)
@@ -74,7 +77,13 @@ int MpvAbstractItem::getPropertyAsync(const QString &property, int id)
 
 QVariant MpvAbstractItem::expandText(const QString &text)
 {
-    return d_ptr->m_mpvController->command(QStringList{QStringLiteral("expand-text"), text});
+    QVariant value;
+    QMetaObject::invokeMethod(d_ptr->m_mpvController,
+                              "command",
+                              Qt::BlockingQueuedConnection,
+                              Q_RETURN_ARG(QVariant, value),
+                              Q_ARG(QVariant, QVariant::fromValue(QStringList{QStringLiteral("expand-text"), text})));
+    return value;
 }
 
 int MpvAbstractItem::commandAsync(const QStringList &params, int id)
