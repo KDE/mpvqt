@@ -230,7 +230,7 @@ void MpvController::eventHandler()
         case MPV_EVENT_GET_PROPERTY_REPLY: {
             mpv_event_property *prop = static_cast<mpv_event_property *>(event->data);
             auto data = d_ptr->nodeToVariant(reinterpret_cast<mpv_node *>(prop->data));
-            Q_EMIT asyncReply(data.toString(), {*event});
+            Q_EMIT asyncReply(data, {*event});
             break;
         }
 
