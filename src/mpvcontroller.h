@@ -135,7 +135,7 @@ public:
      * @param `id` used to associate requests with replies
      * @return error code (if parsing or queuing the command fails)
      */
-    int commandAsync(const QVariant &params, int id = 0);
+    Q_SLOT int commandAsync(const QVariant &params, int id = 0);
 
     /**
      * Return an error string from an ErrorReturn.
