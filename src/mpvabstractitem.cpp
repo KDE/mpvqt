@@ -33,6 +33,8 @@ MpvAbstractItem::MpvAbstractItem(QQuickItem *parent)
     d_ptr->m_mpv = d_ptr->m_mpvController->mpv();
 
     connect(d_ptr->m_workerThread, &QThread::finished, d_ptr->m_mpvController, &MpvController::deleteLater);
+    connect(this, &MpvAbstractItem::setProperty, d_ptr->m_mpvController, &MpvController::setProperty, Qt::QueuedConnection);
+    connect(this, &MpvAbstractItem::command, d_ptr->m_mpvController, &MpvController::command, Qt::QueuedConnection);
 }
 
 MpvAbstractItem::~MpvAbstractItem()
@@ -63,11 +65,6 @@ MpvController *MpvAbstractItem::mpvController()
     return d_ptr->m_mpvController;
 }
 
-int MpvAbstractItem::setProperty(const QString &property, const QVariant &value)
-{
-    return d_ptr->m_mpvController->setProperty(property, value);
-}
-
 int MpvAbstractItem::setPropertyAsync(const QString &property, const QVariant &value, int id)
 {
     return d_ptr->m_mpvController->setPropertyAsync(property, value, id);
@@ -86,11 +83,6 @@ int MpvAbstractItem::getPropertyAsync(const QString &property, int id)
 QVariant MpvAbstractItem::expandText(const QString &text)
 {
     return d_ptr->m_mpvController->command(QStringList{QStringLiteral("expand-text"), text});
-}
-
-QVariant MpvAbstractItem::command(const QStringList &params)
-{
-    return d_ptr->m_mpvController->command(params);
 }
 
 int MpvAbstractItem::commandAsync(const QStringList &params, int id)
