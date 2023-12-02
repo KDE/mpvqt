@@ -34,11 +34,11 @@ public:
 
 Q_SIGNALS:
     void ready();
+    void observeProperty(const QString &property, mpv_format format);
     void setProperty(const QString &property, const QVariant &value);
     void command(const QStringList &params);
 
 protected:
-    void observeProperty(const QString &property, mpv_format format, int id = 0);
     MpvController *mpvController();
 
     std::unique_ptr<MpvAbstractItemPrivate> d_ptr;

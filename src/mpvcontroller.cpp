@@ -298,6 +298,11 @@ mpv_handle *MpvController::mpv() const
     return d_ptr->m_mpv;
 }
 
+void MpvController::observeProperty(const QString &property, mpv_format format)
+{
+    mpv_observe_property(mpv(), 0, property.toUtf8().data(), format);
+}
+
 int MpvController::setProperty(const QString &property, const QVariant &value)
 {
     mpv_node node;

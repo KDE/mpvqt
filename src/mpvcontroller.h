@@ -65,6 +65,8 @@ class MPVQT_EXPORT MpvController : public QObject
 public:
     explicit MpvController(QObject *parent = nullptr);
 
+    void observeProperty(const QString &property, mpv_format format);
+
     /**
      * Set the given property as mpv_node converted from the QVariant argument.
      *

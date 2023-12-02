@@ -17,11 +17,6 @@ MpvAbstractItemPrivate::MpvAbstractItemPrivate(MpvAbstractItem *q)
 {
 }
 
-void MpvAbstractItemPrivate::observeProperty(const QString &property, mpv_format format, int id)
-{
-    mpv_observe_property(m_mpv, id, property.toUtf8().data(), format);
-}
-
 MpvAbstractItem::MpvAbstractItem(QQuickItem *parent)
     : QQuickFramebufferObject(parent)
     , d_ptr{std::make_unique<MpvAbstractItemPrivate>(this)}
@@ -34,6 +29,7 @@ MpvAbstractItem::MpvAbstractItem(QQuickItem *parent)
     d_ptr->m_mpv = d_ptr->m_mpvController->mpv();
 
     connect(d_ptr->m_workerThread, &QThread::finished, d_ptr->m_mpvController, &MpvController::deleteLater);
+    connect(this, &MpvAbstractItem::observeProperty, d_ptr->m_mpvController, &MpvController::observeProperty, Qt::QueuedConnection);
     connect(this, &MpvAbstractItem::setProperty, d_ptr->m_mpvController, &MpvController::setProperty, Qt::QueuedConnection);
     connect(this, &MpvAbstractItem::command, d_ptr->m_mpvController, &MpvController::command, Qt::QueuedConnection);
 }
@@ -54,11 +50,6 @@ MpvAbstractItem::~MpvAbstractItem()
 QQuickFramebufferObject::Renderer *MpvAbstractItem::createRenderer() const
 {
     return new MpvRenderer(const_cast<MpvAbstractItem *>(this));
-}
-
-void MpvAbstractItem::observeProperty(const QString &property, mpv_format format, int id)
-{
-    d_ptr->observeProperty(property, format, id);
 }
 
 MpvController *MpvAbstractItem::mpvController()

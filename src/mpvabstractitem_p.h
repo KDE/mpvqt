@@ -14,8 +14,6 @@ class MpvAbstractItemPrivate
 public:
     explicit MpvAbstractItemPrivate(MpvAbstractItem *q);
 
-    void observeProperty(const QString &property, mpv_format format, int id = 0);
-
     MpvAbstractItem *q_ptr;
     QThread *m_workerThread{nullptr};
     MpvController *m_mpvController{nullptr};
