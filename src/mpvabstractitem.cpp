@@ -57,6 +57,19 @@ MpvController *MpvAbstractItem::mpvController()
     return d_ptr->m_mpvController;
 }
 
+int MpvAbstractItem::setPropertyBlocking(const QString &property, const QVariant &value)
+{
+    int error;
+    QMetaObject::invokeMethod(d_ptr->m_mpvController,
+                              "setProperty",
+                              Qt::BlockingQueuedConnection,
+                              Q_RETURN_ARG(int, error),
+                              Q_ARG(QString, property),
+                              Q_ARG(QVariant, value));
+
+    return error;
+}
+
 void MpvAbstractItem::setPropertyAsync(const QString &property, const QVariant &value, int id)
 {
     QMetaObject::invokeMethod(d_ptr->m_mpvController,
