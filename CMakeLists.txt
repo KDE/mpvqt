@@ -40,10 +40,6 @@ ecm_setup_version(PROJECT
     SOVERSION 1
 )
 
-#
-# FIND PACKAGES
-#
-
 find_package(QT NAMES Qt6 REQUIRED COMPONENTS Quick)
 
 find_package(Qt6Quick)
@@ -52,10 +48,6 @@ set_package_properties(Qt6Quick PROPERTIES TYPE REQUIRED)
 find_package(Libmpv)
 set_package_properties(Libmpv PROPERTIES TYPE REQUIRED
     URL "https://mpv.io")
-
-#
-# END FIND PACKAGES
-#
 
 set(CMAKECONFIG_INSTALL_DIR "${KDE_INSTALL_CMAKEPACKAGEDIR}/MpvQt")
 
