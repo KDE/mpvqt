@@ -39,10 +39,7 @@ ecm_setup_version(PROJECT
     SOVERSION 1
 )
 
-find_package(QT NAMES Qt6 REQUIRED COMPONENTS Quick)
-
-find_package(Qt6Quick)
-set_package_properties(Qt6Quick PROPERTIES TYPE REQUIRED)
+find_package(Qt6 ${REQUIRED_QT_VERSION} REQUIRED COMPONENTS Quick)
 
 find_package(Libmpv)
 set_package_properties(Libmpv PROPERTIES TYPE REQUIRED
