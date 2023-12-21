@@ -8,10 +8,6 @@ cmake_minimum_required(VERSION 3.15)
 
 project(MpvQt  VERSION 1.0.0 LANGUAGES CXX)
 
-set(CMAKE_INCLUDE_CURRENT_DIR ON)
-set(CMAKE_AUTOMOC ON)
-set(CMAKE_CXX_STANDARD 17)
-set(CMAKE_CXX_STANDARD_REQUIRED ON)
 set(REQUIRED_QT_VERSION 6.5.0)
 
 find_package(ECM 5.89 REQUIRED NO_MODULE)
@@ -20,7 +16,7 @@ set(CMAKE_MODULE_PATH ${ECM_MODULE_PATH} ${CMAKE_CURRENT_SOURCE_DIR}/cmake)
 include(FeatureSummary)
 include(KDEInstallDirs)
 include(KDECMakeSettings NO_POLICY_SCOPE)
-include(KDECMakeSettings)
+include(KDECompilerSettings NO_POLICY_SCOPE)
 include(ECMGenerateHeaders)
 include(ECMGenerateExportHeader)
 
