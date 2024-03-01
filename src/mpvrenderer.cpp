@@ -71,7 +71,7 @@ QOpenGLFramebufferObject *MpvRenderer::createFramebufferObject(const QSize &size
 #endif
 
         mpv_render_param display{MPV_RENDER_PARAM_INVALID, nullptr};
-#if defined(Q_OS_UNIX) && !defined(Q_OS_DARWIN) && !defined(Q_OS_ANDROID)
+#if defined(Q_OS_UNIX) && !defined(Q_OS_DARWIN) && !defined(Q_OS_ANDROID) && !defined(Q_OS_HAIKU)
         if (QGuiApplication::platformName() == QStringLiteral("xcb")) {
             display.type = MPV_RENDER_PARAM_X11_DISPLAY;
             display.data = qGuiApp->nativeInterface<QNativeInterface::QX11Application>()->display();
