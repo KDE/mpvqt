@@ -183,6 +183,9 @@ void MpvController::init()
         qFatal("could not initialize mpv context");
     }
     mpv_set_wakeup_callback(d_ptr->m_mpv, MpvController::mpvEvents, this);
+
+    // otherwise mpv opens a separate window
+    setProperty(QStringLiteral("vo"), QStringLiteral("libmpv"));
 }
 
 void MpvController::mpvEvents(void *ctx)
