@@ -23,9 +23,11 @@ MpvAbstractItem::MpvAbstractItem(QQuickItem *parent)
     , d_ptr{std::make_unique<MpvAbstractItemPrivate>(this)}
 {
     if (QQuickWindow::graphicsApi() != QSGRendererInterface::OpenGL) {
-        qFatal(
-            "You must set the graphics api to opengl 'QQuickWindow::setGraphicsApi(QSGRendererInterface::OpenGL)'\n"
-            "The call to the function must happen before constructing the first QQuickWindow in the application.");
+        qDebug() << "MpvAbstractItem: "
+                    "The graphics api must be set to opengl or mpv won't be able to render the video.\n"
+                    "QQuickWindow::setGraphicsApi(QSGRendererInterface::OpenGL)\n"
+                    "The call to the function must happen before constructing "
+                    "the first QQuickWindow in the application.";
     }
 
     d_ptr->m_workerThread = new QThread;
