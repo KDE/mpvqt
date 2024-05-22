@@ -7,6 +7,7 @@
 #include "mpvabstractitem.h"
 #include "mpvabstractitem_p.h"
 
+#include <QQuickWindow>
 #include <QThread>
 
 #include "mpvcontroller.h"
@@ -21,6 +22,12 @@ MpvAbstractItem::MpvAbstractItem(QQuickItem *parent)
     : QQuickFramebufferObject(parent)
     , d_ptr{std::make_unique<MpvAbstractItemPrivate>(this)}
 {
+    if (QQuickWindow::graphicsApi() != QSGRendererInterface::OpenGL) {
+        qFatal(
+            "You must set the graphics api to opengl 'QQuickWindow::setGraphicsApi(QSGRendererInterface::OpenGL)'\n"
+            "The call to the function must happen before constructing the first QQuickWindow in the application.");
+    }
+
     d_ptr->m_workerThread = new QThread;
     d_ptr->m_mpvController = new MpvController;
     d_ptr->m_workerThread->start();

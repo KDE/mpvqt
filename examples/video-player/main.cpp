@@ -6,6 +6,7 @@
 
 #include <QGuiApplication>
 #include <QQmlApplicationEngine>
+#include <QQuickWindow>
 
 #include <MpvAbstractItem>
 #include "mpvitem.h"
@@ -13,6 +14,7 @@
 
 int main(int argc, char *argv[])
 {
+    QQuickWindow::setGraphicsApi(QSGRendererInterface::OpenGL);
     QGuiApplication app(argc, argv);
 
     qmlRegisterType<MpvItem>("com.example.mpv", 1, 0, "MpvItem");
