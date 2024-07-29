@@ -10,7 +10,7 @@ project(videoplayer LANGUAGES CXX)
 
 set(CMAKE_AUTOUIC ON)
 
-find_package(ECM 5.89 REQUIRED NO_MODULE)
+find_package(ECM 6.0.0 REQUIRED NO_MODULE)
 set(CMAKE_MODULE_PATH ${ECM_MODULE_PATH} ${CMAKE_CURRENT_SOURCE_DIR}/cmake)
 
 include(KDEInstallDirs)
