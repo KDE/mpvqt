@@ -1,7 +1,7 @@
 <!--
 SPDX-FileCopyrightText: 2023 George Florea Bănuș <georgefb899@gmail.com>
 
-SPDX-License-Identifier: CC-BY-SA-4.0
+SPDX-License-Identifier: CC0-1.0
 -->
 
 MpvQt is a [libmpv](https://github.com/mpv-player/mpv/) wrapper for Qt Quick 2/Qml.
