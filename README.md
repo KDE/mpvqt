@@ -12,3 +12,9 @@ MpvQt is a [libmpv](https://github.com/mpv-player/mpv/) wrapper for Qt Quick 2/Q
 - Register the class `qmlRegisterType<ClassName>("com.example.mpv", 1, 0, "NameUsedInQml");`
 - In your qml file import mpv `import com.example.mpv 1.0`
 - Then create an instance `NameUsedInQml {}` (check the [Main.qml](examples/video-player/Main.qml) file in the example)
+
+## Config file
+MpvQt loads a config file located at `<config_folder>/mpvqt/mpvqt.conf`,
+the file has to be manually created and is a regular mpv config file.
+The settings apply to all applications using MpvQt,
+applications can override the properties set in MpvQt's config file.
