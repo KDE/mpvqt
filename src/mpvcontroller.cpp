@@ -7,8 +7,8 @@
 #include "mpvcontroller.h"
 #include "mpvcontroller_p.h"
 
+#include <QStandardPaths>
 #include <QVariant>
-#include <QDebug>
 
 #include <clocale>
 
@@ -185,6 +185,10 @@ void MpvController::init()
     mpv_set_wakeup_callback(d_ptr->m_mpv, MpvController::mpvEvents, this);
 
     // otherwise mpv opens a separate window
+    QString configPath = QStandardPaths::writableLocation(QStandardPaths::ConfigLocation);
+    configPath.append(QStringLiteral("/mpvqt"));
+    configPath.append(QStringLiteral("/mpvqt.conf"));
+    setProperty(QStringLiteral("include"), configPath);
     setProperty(QStringLiteral("vo"), QStringLiteral("libmpv"));
 }
 
