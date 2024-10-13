@@ -18,3 +18,8 @@ MpvQt loads a config file located at `<config_folder>/mpvqt/mpvqt.conf`,
 the file has to be manually created and is a regular mpv config file.
 The settings apply to all applications using MpvQt,
 applications can override the properties set in MpvQt's config file.
+
+### Applications using MpvQt
+ - [Haruna](https://invent.kde.org/multimedia/haruna)
+ - [PlasmaTube](https://invent.kde.org/multimedia/plasmatube)
+ - [Tokodon](https://invent.kde.org/network/tokodon)
