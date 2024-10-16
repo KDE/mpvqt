@@ -21,14 +21,21 @@ find_package(Qt6 COMPONENTS Core Quick REQUIRED)
 
 find_package(MpvQt)
 
-add_executable(videoplayer)
+qt_standard_project_setup(REQUIRES 6.5)
+qt_add_executable(videoplayer)
+
+qt_policy(SET QTP0001 NEW)
+qt_add_qml_module(videoplayer
+    URI com.example.mpvqt
+    QML_FILES
+        Main.qml
+)
 
 target_sources(videoplayer
     PRIVATE
         main.cpp
         mpvitem.h mpvitem.cpp
         mpvproperties.h
-        qml.qrc
 )
 
 target_link_libraries(videoplayer

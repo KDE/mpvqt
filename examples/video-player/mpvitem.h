@@ -8,12 +8,14 @@
 #define MPVOBJECT_H
 
 #include <MpvAbstractItem>
+#include <qqmlintegration.h>
 
 class MpvRenderer;
 
 class MpvItem : public MpvAbstractItem
 {
     Q_OBJECT
+    QML_ELEMENT
 public:
     explicit MpvItem(QQuickItem *parent = nullptr);
     ~MpvItem() = default;

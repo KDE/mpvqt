@@ -9,16 +9,11 @@
 #include <QQuickWindow>
 
 #include <MpvAbstractItem>
-#include "mpvitem.h"
-#include "mpvproperties.h"
 
 int main(int argc, char *argv[])
 {
     QQuickWindow::setGraphicsApi(QSGRendererInterface::OpenGL);
     QGuiApplication app(argc, argv);
-
-    qmlRegisterType<MpvItem>("com.example.mpv", 1, 0, "MpvItem");
-    qmlRegisterSingletonInstance("com.example.mpv", 1, 0, "MpvProperties", MpvProperties::self());
 
     QQmlApplicationEngine engine(&app);
     const QUrl url(QStringLiteral("qrc:/Main.qml"));
@@ -29,7 +24,7 @@ int main(int argc, char *argv[])
     };
     QObject::connect(&engine, &QQmlApplicationEngine::objectCreated,
                      &app, onObjectCreated, Qt::QueuedConnection);
-    engine.load(url);
+    engine.loadFromModule("com.example.mpvqt", "Main");
 
     return app.exec();
 }

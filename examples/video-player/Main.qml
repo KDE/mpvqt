@@ -9,7 +9,7 @@ import QtQuick
 import QtQuick.Window
 import QtQuick.Dialogs
 
-import com.example.mpv
+import com.example.mpvqt
 
 Window {
     width: 1000

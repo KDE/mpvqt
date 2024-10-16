@@ -8,10 +8,12 @@
 #define MPVPROPERTIES_H
 
 #include <QObject>
+#include <qqmlintegration.h>
 
 class MpvProperties : public QObject
 {
     Q_OBJECT
+    QML_ELEMENT
 
 public:
     static MpvProperties *self()
