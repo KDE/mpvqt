@@ -25,8 +25,6 @@ find_package(Libmpv)
 set_package_properties(Libmpv PROPERTIES TYPE REQUIRED
     URL "https://mpv.io")
 
-set(CMAKECONFIG_INSTALL_DIR "${KDE_INSTALL_CMAKEPACKAGEDIR}/MpvQt")
-
 feature_summary(WHAT ALL FATAL_ON_MISSING_REQUIRED_PACKAGES)
 
 include(KDEInstallDirs)
@@ -34,6 +32,8 @@ include(KDECMakeSettings NO_POLICY_SCOPE)
 include(KDECompilerSettings NO_POLICY_SCOPE)
 include(ECMGenerateHeaders)
 include(ECMGenerateExportHeader)
+
+set(CMAKECONFIG_INSTALL_DIR "${KDE_INSTALL_CMAKEPACKAGEDIR}/MpvQt")
 
 include(KDEClangFormat)
 file(GLOB_RECURSE ALL_CLANG_FORMAT_SOURCE_FILES *.cpp *.h *.hpp *.c)
