@@ -6,6 +6,7 @@
 
 import QtCore
 import QtQuick
+import QtQuick.Controls
 import QtQuick.Window
 import QtQuick.Dialogs
 
@@ -36,6 +37,18 @@ Window {
                 text: `${mpv.formattedPosition} / ${mpv.formattedDuration}`
                 anchors.centerIn: parent
             }
+        }
+
+        Slider {
+            from: 0
+            to: mpv.duration
+            value: mpv.position
+            onValueChanged: mpv.position = value
+
+            anchors.bottom: mpv.bottom
+            anchors.horizontalCenter: mpv.horizontalCenter
+            anchors.bottomMargin: 20
+            width: mpv.width - 50
         }
 
         Shortcut {
