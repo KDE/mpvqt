@@ -119,7 +119,7 @@ void MpvItem::loadFile(const QString &file)
         Q_EMIT currentUrlChanged();
     }
 
-    Q_EMIT command(QStringList() << QStringLiteral("loadfile") << m_currentUrl.toLocalFile());
+    Q_EMIT command(QStringList() << QStringLiteral("loadfile") << m_currentUrl.toString(QUrl::PreferLocalFile));
 }
 
 QString MpvItem::mediaTitle()
