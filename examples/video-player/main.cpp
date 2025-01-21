@@ -8,22 +8,17 @@
 #include <QQmlApplicationEngine>
 #include <QQuickWindow>
 
-#include <MpvAbstractItem>
-
 int main(int argc, char *argv[])
 {
     QQuickWindow::setGraphicsApi(QSGRendererInterface::OpenGL);
     QGuiApplication app(argc, argv);
 
     QQmlApplicationEngine engine(&app);
-    const QUrl url(QStringLiteral("qrc:/Main.qml"));
-    auto onObjectCreated = [url](const QObject *obj, const QUrl &objUrl) {
-        if (!obj && url == objUrl) {
-            QCoreApplication::exit(-1);
-        }
-    };
-    QObject::connect(&engine, &QQmlApplicationEngine::objectCreated,
-                     &app, onObjectCreated, Qt::QueuedConnection);
+    // clang-format off
+    QObject::connect(&engine, &QQmlApplicationEngine::objectCreationFailed, &app, []() {
+        QCoreApplication::exit(-1);
+    }, Qt::QueuedConnection);
+    // clang-format on
     engine.loadFromModule("com.example.mpvqt", "Main");
 
     return app.exec();
