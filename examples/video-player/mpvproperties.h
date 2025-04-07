@@ -14,8 +14,14 @@ class MpvProperties : public QObject
 {
     Q_OBJECT
     QML_ELEMENT
+    QML_SINGLETON
 
 public:
+    explicit MpvProperties(QObject *parent = nullptr)
+        : QObject(parent)
+    {
+    }
+
     static MpvProperties *self()
     {
         static MpvProperties p;
@@ -41,15 +47,7 @@ public:
     const QString Mute{QStringLiteral("mute")};
 
 private:
-    explicit MpvProperties(QObject *parent = nullptr)
-        : QObject(parent)
-    {
-    }
-
-    MpvProperties(const MpvProperties &) = delete;
-    MpvProperties &operator=(const MpvProperties &) = delete;
-    MpvProperties(MpvProperties &&) = delete;
-    MpvProperties &operator=(MpvProperties &&) = delete;
+    Q_DISABLE_COPY_MOVE(MpvProperties)
 };
 
 #endif // MPVPROPERTIES_H
