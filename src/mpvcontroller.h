@@ -85,7 +85,17 @@ public Q_SLOTS:
      * @param format see enum mpv_format. Can be MPV_FORMAT_NONE to omit values
      *               from the change events.
      */
-    void observeProperty(const QString &property, mpv_format format);
+    void observeProperty(const QString &property, mpv_format format, uint64_t id = 0);
+
+    /**
+     * Undo observeProperty(). This will remove all observed properties for
+     * which the given number was passed as `id` to observeProperty.
+     *
+     * @param id the id that was passed to observeProperty
+     * @return negative value is an error code, >=0 is number of removed properties
+     *         on success (includes the case when 0 were removed)
+     */
+    int unobserveProperty(uint64_t id);
 
     /**
      * Set the given property as mpv_node converted from the QVariant argument.

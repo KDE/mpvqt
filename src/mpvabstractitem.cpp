@@ -125,4 +125,9 @@ QVariant MpvAbstractItem::expandText(const QString &text)
     return value;
 }
 
+int MpvAbstractItem::unobserveProperty(uint64_t id)
+{
+    return mpvController()->unobserveProperty(id);
+}
+
 #include "moc_mpvabstractitem.cpp"

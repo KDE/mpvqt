@@ -301,9 +301,14 @@ mpv_handle *MpvController::mpv() const
     return d_ptr->m_mpv;
 }
 
-void MpvController::observeProperty(const QString &property, mpv_format format)
+void MpvController::observeProperty(const QString &property, mpv_format format, uint64_t id)
 {
-    mpv_observe_property(mpv(), 0, property.toUtf8().data(), format);
+    mpv_observe_property(mpv(), id, property.toUtf8().data(), format);
+}
+
+int MpvController::unobserveProperty(uint64_t id)
+{
+    return mpv_unobserve_property(mpv(), id);
 }
 
 int MpvController::setProperty(const QString &property, const QVariant &value)
