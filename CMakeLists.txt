@@ -47,7 +47,7 @@ ecm_setup_version(PROJECT
     VARIABLE_PREFIX MPVQT
     VERSION_HEADER "${CMAKE_CURRENT_BINARY_DIR}/src/mpvqt_version.h"
     PACKAGE_VERSION_FILE "${CMAKE_CURRENT_BINARY_DIR}/MpvQtConfigVersion.cmake"
-    SOVERSION 1
+    SOVERSION 2
 )
 
 include(CMakePackageConfigHelpers)
