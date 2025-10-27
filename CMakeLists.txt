@@ -10,30 +10,15 @@ project(MpvQt VERSION 1.1.1 LANGUAGES CXX)
 
 set(REQUIRED_QT_VERSION 6.5.0)
 
-include(FeatureSummary)
-
 find_package(ECM 6.0.0 NO_MODULE)
-set_package_properties(ECM PROPERTIES TYPE REQUIRED
-    URL "https://api.kde.org/ecm/"
-    DESCRIPTION "extra cmake modules")
 set(CMAKE_MODULE_PATH ${ECM_MODULE_PATH} ${CMAKE_CURRENT_SOURCE_DIR}/cmake)
-
-find_package(Qt6Quick ${REQUIRED_QT_VERSION})
-set_package_properties(Qt6Quick PROPERTIES TYPE REQUIRED)
-
-find_package(Libmpv)
-set_package_properties(Libmpv PROPERTIES TYPE REQUIRED
-    URL "https://mpv.io")
-
-feature_summary(WHAT ALL FATAL_ON_MISSING_REQUIRED_PACKAGES)
 
 include(KDEInstallDirs)
 include(KDECMakeSettings NO_POLICY_SCOPE)
 include(KDECompilerSettings NO_POLICY_SCOPE)
 include(ECMGenerateHeaders)
 include(ECMGenerateExportHeader)
-
-set(CMAKECONFIG_INSTALL_DIR "${KDE_INSTALL_CMAKEPACKAGEDIR}/MpvQt")
+include(FeatureSummary)
 
 include(KDEClangFormat)
 file(GLOB_RECURSE ALL_CLANG_FORMAT_SOURCE_FILES *.cpp *.h *.hpp *.c)
@@ -49,6 +34,21 @@ ecm_setup_version(PROJECT
     PACKAGE_VERSION_FILE "${CMAKE_CURRENT_BINARY_DIR}/MpvQtConfigVersion.cmake"
     SOVERSION 2
 )
+
+set_package_properties(ECM PROPERTIES TYPE REQUIRED
+    URL "https://api.kde.org/ecm/"
+    DESCRIPTION "extra cmake modules")
+
+find_package(Qt6Quick ${REQUIRED_QT_VERSION})
+set_package_properties(Qt6Quick PROPERTIES TYPE REQUIRED)
+
+find_package(Libmpv)
+set_package_properties(Libmpv PROPERTIES TYPE REQUIRED
+    URL "https://mpv.io")
+
+feature_summary(WHAT ALL FATAL_ON_MISSING_REQUIRED_PACKAGES)
+
+set(CMAKECONFIG_INSTALL_DIR "${KDE_INSTALL_CMAKEPACKAGEDIR}/MpvQt")
 
 include(CMakePackageConfigHelpers)
 configure_package_config_file(
