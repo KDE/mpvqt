@@ -4,7 +4,7 @@
 # SPDX-License-Identifier: BSD-3-Clause
 #
 
-cmake_minimum_required(VERSION 3.15)
+cmake_minimum_required(VERSION 3.16...3.31)
 
 project(MpvQt VERSION 1.1.1 LANGUAGES CXX)
 
