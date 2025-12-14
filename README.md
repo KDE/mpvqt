@@ -21,4 +21,5 @@ applications can override the properties set in MpvQt's config file.
 
 ### Applications using MpvQt
  - [Haruna](https://invent.kde.org/multimedia/haruna)
+ - [Jellyfin Desktop](https://github.com/jellyfin/jellyfin-desktop)
  - [PlasmaTube](https://invent.kde.org/multimedia/plasmatube)
