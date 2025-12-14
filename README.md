@@ -8,10 +8,44 @@ MpvQt is a [libmpv](https://github.com/mpv-player/mpv/) wrapper for Qt Quick 2/Q
 
 ## How to use
 
-- Create a class extending `MpvAbstractItem` (check the [mpvitem.h](examples/video-player/mpvitem.h)/[mpvitem.cpp](examples/video-player/mpvitem.cpp) files in the example)
-- Register the class `qmlRegisterType<ClassName>("com.example.mpv", 1, 0, "NameUsedInQml");`
-- In your qml file import mpv `import com.example.mpv 1.0`
-- Then create an instance `NameUsedInQml {}` (check the [Main.qml](examples/video-player/Main.qml) file in the example)
+- Create a class extending `MpvAbstractItem`
+
+```c++
+class MpvItem : public MpvAbstractItem
+{
+    Q_OBJECT
+    QML_ELEMENT
+    // ...
+}
+```
+- Add the class to a qml module
+
+```cmake
+qt_add_qml_module(videoplayer
+    URI com.example.mpvqt
+    QML_FILES
+        Main.qml
+)
+
+target_sources(videoplayer
+    PRIVATE
+        mpvitem.h mpvitem.cpp
+)
+```
+or
+```cmake
+qt_add_qml_module(videoplayer
+    URI com.example.mpvqt
+    QML_FILES
+        Main.qml
+    SOURCES
+        mpvitem.h mpvitem.cpp
+)
+```
+
+- In your qml file import mpv `import com.example.mpvqt`
+- Then create an instance `MpvItem {}`, `MpvItem` is the class name extending MpvAbstractItem,
+ if you want to use another name replace `QML_ELEMENT` with `QML_NAMED_ELEMENT(VideoPlayer)`
 
 ## Config file
 MpvQt loads a config file located at `<config_folder>/mpvqt/mpvqt.conf`,
