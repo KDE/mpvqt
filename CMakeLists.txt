@@ -12,11 +12,44 @@ set(REQUIRED_QT_VERSION 6.5.0)
 
 include(FeatureSummary)
 
-find_package(ECM 6.0.0 NO_MODULE)
+find_package(ECM 6.10.0 NO_MODULE)
 set_package_properties(ECM PROPERTIES TYPE REQUIRED
     URL "https://api.kde.org/ecm/"
-    DESCRIPTION "extra cmake modules")
-set(CMAKE_MODULE_PATH ${ECM_MODULE_PATH} ${CMAKE_CURRENT_SOURCE_DIR}/cmake)
+    DESCRIPTION "Extra modules and scripts for CMake")
+
+if(ECM_FOUND)
+    set(CMAKE_MODULE_PATH ${ECM_MODULE_PATH} ${CMAKE_CURRENT_SOURCE_DIR}/cmake)
+
+    include(KDEInstallDirs)
+    include(KDECMakeSettings NO_POLICY_SCOPE)
+    include(KDECompilerSettings NO_POLICY_SCOPE)
+    include(ECMGenerateHeaders)
+    include(ECMGenerateExportHeader)
+
+    set(CMAKECONFIG_INSTALL_DIR "${KDE_INSTALL_CMAKEPACKAGEDIR}/MpvQt")
+
+    include(KDEClangFormat)
+    file(GLOB_RECURSE ALL_CLANG_FORMAT_SOURCE_FILES *.cpp *.h *.hpp *.c)
+    kde_clang_format(${ALL_CLANG_FORMAT_SOURCE_FILES})
+
+    include(KDEGitCommitHooks)
+    kde_configure_git_pre_commit_hook(CHECKS CLANG_FORMAT)
+
+    include(ECMSetupVersion)
+    ecm_setup_version(PROJECT
+        VARIABLE_PREFIX MPVQT
+        VERSION_HEADER "${CMAKE_CURRENT_BINARY_DIR}/src/mpvqt_version.h"
+        PACKAGE_VERSION_FILE "${CMAKE_CURRENT_BINARY_DIR}/MpvQtConfigVersion.cmake"
+        SOVERSION 2
+    )
+
+    include(CMakePackageConfigHelpers)
+    configure_package_config_file(
+        "${CMAKE_CURRENT_SOURCE_DIR}/MpvQtConfig.cmake.in"
+        "${CMAKE_CURRENT_BINARY_DIR}/MpvQtConfig.cmake"
+        INSTALL_DESTINATION ${CMAKECONFIG_INSTALL_DIR}
+    )
+endif()
 
 find_package(Qt6Quick ${REQUIRED_QT_VERSION})
 set_package_properties(Qt6Quick PROPERTIES TYPE REQUIRED)
@@ -26,36 +59,6 @@ set_package_properties(Libmpv PROPERTIES TYPE REQUIRED
     URL "https://mpv.io")
 
 feature_summary(WHAT ALL FATAL_ON_MISSING_REQUIRED_PACKAGES)
-
-include(KDEInstallDirs)
-include(KDECMakeSettings NO_POLICY_SCOPE)
-include(KDECompilerSettings NO_POLICY_SCOPE)
-include(ECMGenerateHeaders)
-include(ECMGenerateExportHeader)
-
-set(CMAKECONFIG_INSTALL_DIR "${KDE_INSTALL_CMAKEPACKAGEDIR}/MpvQt")
-
-include(KDEClangFormat)
-file(GLOB_RECURSE ALL_CLANG_FORMAT_SOURCE_FILES *.cpp *.h *.hpp *.c)
-kde_clang_format(${ALL_CLANG_FORMAT_SOURCE_FILES})
-
-include(KDEGitCommitHooks)
-kde_configure_git_pre_commit_hook(CHECKS CLANG_FORMAT)
-
-include(ECMSetupVersion)
-ecm_setup_version(PROJECT
-    VARIABLE_PREFIX MPVQT
-    VERSION_HEADER "${CMAKE_CURRENT_BINARY_DIR}/src/mpvqt_version.h"
-    PACKAGE_VERSION_FILE "${CMAKE_CURRENT_BINARY_DIR}/MpvQtConfigVersion.cmake"
-    SOVERSION 2
-)
-
-include(CMakePackageConfigHelpers)
-configure_package_config_file(
-    "${CMAKE_CURRENT_SOURCE_DIR}/MpvQtConfig.cmake.in"
-    "${CMAKE_CURRENT_BINARY_DIR}/MpvQtConfig.cmake"
-    INSTALL_DESTINATION ${CMAKECONFIG_INSTALL_DIR}
-)
 
 add_subdirectory(src)
 
