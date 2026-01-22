@@ -373,7 +373,7 @@ QString MpvController::getError(int error)
     case MPV_ERROR_EVENT_QUEUE_FULL:
         return QStringLiteral("MPV_ERROR_EVENT_QUEUE_FULL");
     case MPV_ERROR_NOMEM:
-        return QStringLiteral("MPV_ERROR_EVENT_QUEUE_FULL");
+        return QStringLiteral("MPV_ERROR_NOMEM");
     case MPV_ERROR_UNINITIALIZED:
         return QStringLiteral("MPV_ERROR_UNINITIALIZED");
     case MPV_ERROR_INVALID_PARAMETER:
