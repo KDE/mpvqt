@@ -45,9 +45,6 @@ MpvAbstractItem::MpvAbstractItem(QQuickItem *parent)
 
 MpvAbstractItem::~MpvAbstractItem()
 {
-    if (d_ptr->m_mpv_gl) {
-        mpv_render_context_free(d_ptr->m_mpv_gl);
-    }
     mpv_set_wakeup_callback(d_ptr->m_mpv, nullptr, nullptr);
 
     d_ptr->m_workerThread->quit();
@@ -58,7 +55,7 @@ MpvAbstractItem::~MpvAbstractItem()
 
 QQuickFramebufferObject::Renderer *MpvAbstractItem::createRenderer() const
 {
-    return new MpvRenderer(const_cast<MpvAbstractItem *>(this));
+    return new MpvRenderer();
 }
 
 MpvController *MpvAbstractItem::mpvController()
@@ -128,6 +125,17 @@ QVariant MpvAbstractItem::expandText(const QString &text)
 int MpvAbstractItem::unobserveProperty(uint64_t id)
 {
     return mpvController()->unobserveProperty(id);
+}
+
+void MpvAbstractItem::requestUpdateFromRenderer()
+{
+    update();
+}
+
+void MpvAbstractItem::resetMpvRenderContext()
+{
+    m_resetMpvRenderContext = true;
+    update();
 }
 
 #include "moc_mpvabstractitem.cpp"

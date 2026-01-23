@@ -9,21 +9,32 @@
 
 #include <QtQuick/QQuickFramebufferObject>
 
+#include <mpv/render_gl.h>
+
 class MpvAbstractItem;
 
 class MpvRenderer : public QQuickFramebufferObject::Renderer
 {
 public:
-    explicit MpvRenderer(MpvAbstractItem *new_obj);
-    ~MpvRenderer() = default;
-
-    MpvAbstractItem *m_mpvAItem{nullptr};
+    explicit MpvRenderer();
+    ~MpvRenderer();
 
     // This function is called when a new FBO is needed.
     // This happens on the initial frame.
     QOpenGLFramebufferObject *createFramebufferObject(const QSize &size) override;
 
     void render() override;
+    void synchronize(QQuickFramebufferObject *item) override;
+    void requestUpdate();
+
+private:
+    void createMpvRenderContext();
+    std::atomic<bool> m_needsUpdate{true};
+    QPointer<MpvAbstractItem> m_mpvAItem{nullptr};
+    mpv_render_context *m_mpv_gl{nullptr};
+    mpv_handle *m_mpv{nullptr};
+    bool m_fboReady{false};
+    bool m_resetMpvRenderContext{false};
 };
 
 #endif // MPVRENDERER_H

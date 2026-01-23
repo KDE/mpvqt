@@ -32,6 +32,7 @@ public:
     Q_INVOKABLE void commandAsync(const QStringList &params, int id = 0);
     Q_INVOKABLE QVariant expandText(const QString &text);
     Q_INVOKABLE int unobserveProperty(uint64_t id);
+    Q_INVOKABLE void requestUpdateFromRenderer();
 
     friend class MpvRenderer;
 
@@ -43,8 +44,11 @@ Q_SIGNALS:
 
 protected:
     MpvController *mpvController();
+    void resetMpvRenderContext();
 
     std::unique_ptr<MpvAbstractItemPrivate> d_ptr;
+    bool m_fboReady{false};
+    bool m_resetMpvRenderContext{false};
 };
 
 #endif // MPVABSTRACTITEM_H

@@ -18,7 +18,6 @@ public:
     QThread *m_workerThread{nullptr};
     MpvController *m_mpvController{nullptr};
     mpv_handle *m_mpv{nullptr};
-    mpv_render_context *m_mpv_gl{nullptr};
 };
 
 #endif // MPVABSTRACTITEM_P_H_INCLUDED
