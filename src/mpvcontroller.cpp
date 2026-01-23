@@ -257,7 +257,7 @@ void MpvController::eventHandler()
                 data = *reinterpret_cast<double *>(prop->data);
                 break;
             case MPV_FORMAT_STRING:
-                data = QString::fromStdString(*reinterpret_cast<char **>(prop->data));
+                data = QString::fromUtf8(*reinterpret_cast<char **>(prop->data));
                 break;
             case MPV_FORMAT_INT64:
                 data = qlonglong(*reinterpret_cast<int64_t *>(prop->data));
@@ -275,7 +275,7 @@ void MpvController::eventHandler()
             case MPV_FORMAT_BYTE_ARRAY:
                 break;
             }
-            Q_EMIT propertyChanged(QString::fromStdString(prop->name), data);
+            Q_EMIT propertyChanged(QString::fromUtf8(prop->name), data);
             break;
         }
         case MPV_EVENT_NONE:

@@ -68,7 +68,7 @@ public:
     /**
      * Return an error string from an ErrorReturn.
      */
-    QString getError(int error);
+    static QString getError(int error);
 
     static void mpvEvents(void *ctx);
     void eventHandler();
