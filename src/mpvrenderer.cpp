@@ -49,14 +49,14 @@ MpvRenderer::~MpvRenderer()
 
 void MpvRenderer::synchronize(QQuickFramebufferObject *item)
 {
-    MpvAbstractItem *i = static_cast<MpvAbstractItem *>(item);
-    m_mpvAItem = i;
-    m_mpv = i->d_ptr->m_mpv;
+    MpvAbstractItem *mpvAItem = static_cast<MpvAbstractItem *>(item);
+    m_mpvAItem = mpvAItem;
+    m_mpv = mpvAItem->d_ptr->m_mpv;
 
-    if (i->m_fboReady != m_fboReady) {
-        i->m_fboReady = m_fboReady;
+    if (mpvAItem->m_fboReady != m_fboReady) {
+        mpvAItem->m_fboReady = m_fboReady;
 
-        Q_EMIT i->ready();
+        Q_EMIT mpvAItem->ready();
     }
 }
 
