@@ -32,7 +32,7 @@ private:
     QPointer<MpvAbstractItem> m_mpvAItem{nullptr};
     mpv_render_context *m_mpv_gl{nullptr};
     mpv_handle *m_mpv{nullptr};
-    bool m_fboReady{false};
+    bool m_isFramebufferReady{false};
 };
 
 #endif // MPVRENDERER_H

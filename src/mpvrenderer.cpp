@@ -53,8 +53,8 @@ void MpvRenderer::synchronize(QQuickFramebufferObject *item)
     m_mpvAItem = mpvAItem;
     m_mpv = mpvAItem->d_ptr->m_mpv;
 
-    if (mpvAItem->m_fboReady != m_fboReady) {
-        mpvAItem->m_fboReady = m_fboReady;
+    if (mpvAItem->d_ptr->m_isRendererReady != m_isFramebufferReady) {
+        mpvAItem->d_ptr->m_isRendererReady = m_isFramebufferReady;
 
         Q_EMIT mpvAItem->ready();
     }
@@ -91,7 +91,7 @@ QOpenGLFramebufferObject *MpvRenderer::createFramebufferObject(const QSize &size
 {
     if (!m_mpv_gl) {
         createMpvRenderContext();
-        m_fboReady = true;
+        m_isFramebufferReady = true;
     }
 
     return QQuickFramebufferObject::Renderer::createFramebufferObject(size);

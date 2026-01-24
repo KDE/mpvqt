@@ -46,7 +46,6 @@ protected:
     MpvController *mpvController();
 
     std::unique_ptr<MpvAbstractItemPrivate> d_ptr;
-    bool m_fboReady{false};
 };
 
 #endif // MPVABSTRACTITEM_H
