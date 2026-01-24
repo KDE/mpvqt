@@ -50,7 +50,6 @@ MpvAbstractItem::MpvAbstractItem(QQuickItem *parent)
 
 MpvAbstractItem::~MpvAbstractItem()
 {
-    mpv_set_wakeup_callback(d_ptr->m_mpv, nullptr, nullptr);
     d_ptr->m_workerThread->quit();
     d_ptr->m_workerThread->wait();
     mpv_terminate_destroy(d_ptr->m_mpv);
