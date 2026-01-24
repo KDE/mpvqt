@@ -12,7 +12,7 @@ set(REQUIRED_QT_VERSION 6.5.0)
 
 include(FeatureSummary)
 
-find_package(ECM 6.10.0 NO_MODULE)
+find_package(ECM 6.15.0 NO_MODULE)
 set_package_properties(ECM PROPERTIES TYPE REQUIRED
     URL "https://api.kde.org/ecm/"
     DESCRIPTION "Extra modules and scripts for CMake")
