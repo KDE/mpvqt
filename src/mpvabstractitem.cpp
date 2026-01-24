@@ -137,10 +137,4 @@ void MpvAbstractItem::requestUpdateFromRenderer()
     update();
 }
 
-void MpvAbstractItem::resetMpvRenderContext()
-{
-    m_resetMpvRenderContext = true;
-    update();
-}
-
 #include "moc_mpvabstractitem.cpp"
