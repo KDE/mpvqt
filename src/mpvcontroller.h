@@ -145,7 +145,7 @@ public Q_SLOTS:
      * @param `params` command arguments, with args[0] being the command name as string
      * @return the property value, or an ErrorReturn with the error code
      */
-    QVariant command(const QVariant &params);
+    QVariant command(const QStringList &params);
 
     /**
      * Run commands asynchronously. The result of the operation as well

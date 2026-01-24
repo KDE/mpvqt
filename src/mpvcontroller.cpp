@@ -345,7 +345,7 @@ int MpvController::getPropertyAsync(const QString &property, int id)
     return err;
 }
 
-QVariant MpvController::command(const QVariant &params)
+QVariant MpvController::command(const QStringList &params)
 {
     mpv_node node;
     d_ptr->setNode(&node, params);
