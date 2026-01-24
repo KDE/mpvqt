@@ -54,15 +54,6 @@ void MpvRenderer::synchronize(QQuickFramebufferObject *item)
     m_mpv = i->d_ptr->m_mpv;
     m_resetMpvRenderContext = i->m_resetMpvRenderContext;
 
-    if (m_resetMpvRenderContext) {
-        if (m_mpv_gl) {
-            mpv_render_context_free(m_mpv_gl);
-        }
-        createMpvRenderContext();
-
-        i->m_resetMpvRenderContext = false;
-    }
-
     if (i->m_fboReady != m_fboReady) {
         i->m_fboReady = m_fboReady;
 
@@ -114,6 +105,10 @@ QOpenGLFramebufferObject *MpvRenderer::createFramebufferObject(const QSize &size
 
 void MpvRenderer::createMpvRenderContext()
 {
+    if (!m_mpv) {
+        return;
+    }
+
     mpv_opengl_init_params gl_init_params{get_proc_address_mpv, nullptr};
 
     mpv_render_param display{MPV_RENDER_PARAM_INVALID, nullptr};
