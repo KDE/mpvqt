@@ -36,6 +36,7 @@ MpvAbstractItem::MpvAbstractItem(QQuickItem *parent)
     connect(d_ptr->m_workerThread, &QThread::finished, d_ptr->m_mpvController, &MpvController::deleteLater);
     connect(d_ptr->m_mpvController, &MpvController::initialized, this, [this]() {
         d_ptr->m_mpv = d_ptr->m_mpvController->mpv();
+        update();
     });
 
     connect(this, &MpvAbstractItem::observeProperty, d_ptr->m_mpvController, &MpvController::observeProperty, Qt::QueuedConnection);
