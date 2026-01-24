@@ -76,6 +76,18 @@ void MpvAbstractItem::observeProperty(const QString &property, mpv_format format
                               Q_ARG(uint64_t, id));
 }
 
+int MpvAbstractItem::unobserveProperty(uint64_t id)
+{
+    int result;
+    QMetaObject::invokeMethod(d_ptr->m_mpvController,
+                              "unobserveProperty",
+                              Qt::BlockingQueuedConnection,
+                              Q_RETURN_ARG(int, result),
+                              Q_ARG(uint64_t, id));
+
+    return result;
+}
+
 void MpvAbstractItem::setProperty(const QString &property, const QVariant &value)
 {
     QMetaObject::invokeMethod(d_ptr->m_mpvController,
@@ -169,11 +181,6 @@ QVariant MpvAbstractItem::expandText(const QString &text)
 }
 
 // clang-format on
-
-int MpvAbstractItem::unobserveProperty(uint64_t id)
-{
-    return mpvController()->unobserveProperty(id);
-}
 
 void MpvAbstractItem::requestUpdateFromRenderer()
 {
