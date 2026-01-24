@@ -39,10 +39,6 @@ MpvAbstractItem::MpvAbstractItem(QQuickItem *parent)
         update();
     });
 
-    connect(this, &MpvAbstractItem::observeProperty, d_ptr->m_mpvController, &MpvController::observeProperty, Qt::QueuedConnection);
-    connect(this, &MpvAbstractItem::setProperty, d_ptr->m_mpvController, &MpvController::setProperty, Qt::QueuedConnection);
-    connect(this, &MpvAbstractItem::command, d_ptr->m_mpvController, &MpvController::command, Qt::QueuedConnection);
-
     d_ptr->m_mpvController->moveToThread(d_ptr->m_workerThread);
     d_ptr->m_workerThread->start();
 
@@ -66,6 +62,21 @@ QQuickFramebufferObject::Renderer *MpvAbstractItem::createRenderer() const
 MpvController *MpvAbstractItem::mpvController()
 {
     return d_ptr->m_mpvController;
+}
+
+void MpvAbstractItem::observeProperty(const QString &property, mpv_format format, uint64_t id)
+{
+    QMetaObject::invokeMethod(d_ptr->m_mpvController,
+                              "observeProperty",
+                              Qt::QueuedConnection,
+                              Q_ARG(QString, property),
+                              Q_ARG(mpv_format, format),
+                              Q_ARG(uint64_t, id));
+}
+
+void MpvAbstractItem::setProperty(const QString &property, const QVariant &value)
+{
+    QMetaObject::invokeMethod(d_ptr->m_mpvController, "setProperty", Qt::QueuedConnection, Q_ARG(QString, property), Q_ARG(QVariant, value));
 }
 
 int MpvAbstractItem::setPropertyBlocking(const QString &property, const QVariant &value)
@@ -102,6 +113,11 @@ QVariant MpvAbstractItem::getProperty(const QString &property)
 void MpvAbstractItem::getPropertyAsync(const QString &property, int id)
 {
     QMetaObject::invokeMethod(d_ptr->m_mpvController, "getPropertyAsync", Qt::QueuedConnection, Q_ARG(QString, property), Q_ARG(int, id));
+}
+
+void MpvAbstractItem::command(const QStringList &params)
+{
+    QMetaObject::invokeMethod(d_ptr->m_mpvController, "command", Qt::QueuedConnection, Q_ARG(QStringList, params));
 }
 
 QVariant MpvAbstractItem::commandBlocking(const QVariant &params)

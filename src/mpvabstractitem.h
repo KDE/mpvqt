@@ -24,23 +24,28 @@ public:
     ~MpvAbstractItem();
 
     Renderer *createRenderer() const override;
-    Q_INVOKABLE int setPropertyBlocking(const QString &property, const QVariant &value);
+
+    Q_INVOKABLE void observeProperty(const QString &property, mpv_format format, uint64_t id = 0);
+    Q_INVOKABLE int unobserveProperty(uint64_t id);
+
+    Q_INVOKABLE void setProperty(const QString &property, const QVariant &value);
     Q_INVOKABLE void setPropertyAsync(const QString &property, const QVariant &value, int id = 0);
+    Q_INVOKABLE int setPropertyBlocking(const QString &property, const QVariant &value);
+
     Q_INVOKABLE QVariant getProperty(const QString &property);
     Q_INVOKABLE void getPropertyAsync(const QString &property, int id = 0);
+
+    Q_INVOKABLE void command(const QStringList &params);
     Q_INVOKABLE QVariant commandBlocking(const QVariant &params);
     Q_INVOKABLE void commandAsync(const QStringList &params, int id = 0);
+
     Q_INVOKABLE QVariant expandText(const QString &text);
-    Q_INVOKABLE int unobserveProperty(uint64_t id);
     Q_INVOKABLE void requestUpdateFromRenderer();
 
     friend class MpvRenderer;
 
 Q_SIGNALS:
     void ready();
-    void observeProperty(const QString &property, mpv_format format, uint64_t id = 0);
-    void setProperty(const QString &property, const QVariant &value);
-    void command(const QStringList &params);
 
 protected:
     MpvController *mpvController();
