@@ -78,7 +78,7 @@ void MpvAbstractItem::observeProperty(const QString &property, mpv_format format
 
 int MpvAbstractItem::unobserveProperty(uint64_t id)
 {
-    int result;
+    int result = 0;
     QMetaObject::invokeMethod(d_ptr->m_mpvController,
                               "unobserveProperty",
                               Qt::BlockingQueuedConnection,
@@ -99,7 +99,7 @@ void MpvAbstractItem::setProperty(const QString &property, const QVariant &value
 
 int MpvAbstractItem::setPropertyBlocking(const QString &property, const QVariant &value)
 {
-    int error;
+    int error = 0;
     QMetaObject::invokeMethod(d_ptr->m_mpvController,
                               "setProperty",
                               Qt::BlockingQueuedConnection,
