@@ -52,7 +52,6 @@ void MpvRenderer::synchronize(QQuickFramebufferObject *item)
     MpvAbstractItem *i = static_cast<MpvAbstractItem *>(item);
     m_mpvAItem = i;
     m_mpv = i->d_ptr->m_mpv;
-    m_resetMpvRenderContext = i->m_resetMpvRenderContext;
 
     if (i->m_fboReady != m_fboReady) {
         i->m_fboReady = m_fboReady;
@@ -63,9 +62,6 @@ void MpvRenderer::synchronize(QQuickFramebufferObject *item)
 
 void MpvRenderer::render()
 {
-    if (!m_needsUpdate.exchange(false)) {
-        return;
-    }
     QOpenGLFramebufferObject *fbo = framebufferObject();
     mpv_opengl_fbo mpfbo;
     mpfbo.fbo = static_cast<int>(fbo->handle());
@@ -87,14 +83,12 @@ void MpvRenderer::render()
     int result = mpv_render_context_render(m_mpv_gl, params);
     if (result < 0) {
         qCWarning(MpvQt) << "mpv_render_context_render failed:" << MpvController::getError(result);
-        m_needsUpdate.store(true);
         return;
     }
 }
 
 QOpenGLFramebufferObject *MpvRenderer::createFramebufferObject(const QSize &size)
 {
-    // init mpv_gl:
     if (!m_mpv_gl) {
         createMpvRenderContext();
         m_fboReady = true;
@@ -138,8 +132,6 @@ void MpvRenderer::createMpvRenderContext()
 
 void MpvRenderer::requestUpdate()
 {
-    m_needsUpdate.store(true, std::memory_order_relaxed);
-
     if (m_mpvAItem) {
         QMetaObject::invokeMethod(m_mpvAItem.data(), "requestUpdateFromRenderer", Qt::QueuedConnection);
     }
