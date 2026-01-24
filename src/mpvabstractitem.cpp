@@ -30,27 +30,31 @@ MpvAbstractItem::MpvAbstractItem(QQuickItem *parent)
                     "the first QQuickWindow in the application.";
     }
 
-    d_ptr->m_workerThread = new QThread;
+    d_ptr->m_workerThread = new QThread(this);
     d_ptr->m_mpvController = new MpvController;
-    d_ptr->m_workerThread->start();
-    d_ptr->m_mpvController->moveToThread(d_ptr->m_workerThread);
-    QMetaObject::invokeMethod(d_ptr->m_mpvController, &MpvController::init, Qt::BlockingQueuedConnection);
-    d_ptr->m_mpv = d_ptr->m_mpvController->mpv();
 
     connect(d_ptr->m_workerThread, &QThread::finished, d_ptr->m_mpvController, &MpvController::deleteLater);
+    connect(d_ptr->m_mpvController, &MpvController::initialized, this, [this]() {
+        d_ptr->m_mpv = d_ptr->m_mpvController->mpv();
+    });
+
     connect(this, &MpvAbstractItem::observeProperty, d_ptr->m_mpvController, &MpvController::observeProperty, Qt::QueuedConnection);
     connect(this, &MpvAbstractItem::setProperty, d_ptr->m_mpvController, &MpvController::setProperty, Qt::QueuedConnection);
     connect(this, &MpvAbstractItem::command, d_ptr->m_mpvController, &MpvController::command, Qt::QueuedConnection);
+
+    d_ptr->m_mpvController->moveToThread(d_ptr->m_workerThread);
+    d_ptr->m_workerThread->start();
+
+    QMetaObject::invokeMethod(d_ptr->m_mpvController, &MpvController::init, Qt::QueuedConnection);
 }
 
 MpvAbstractItem::~MpvAbstractItem()
 {
     mpv_set_wakeup_callback(d_ptr->m_mpv, nullptr, nullptr);
-
     d_ptr->m_workerThread->quit();
     d_ptr->m_workerThread->wait();
-    d_ptr->m_workerThread->deleteLater();
     mpv_terminate_destroy(d_ptr->m_mpv);
+    d_ptr->m_workerThread->deleteLater();
 }
 
 QQuickFramebufferObject::Renderer *MpvAbstractItem::createRenderer() const
