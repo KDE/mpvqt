@@ -7,10 +7,13 @@
 #include "mpvcontroller.h"
 #include "mpvcontroller_p.h"
 
+#include <QLoggingCategory>
 #include <QStandardPaths>
 #include <QVariant>
 
 #include <clocale>
+
+Q_LOGGING_CATEGORY(MpvQt_MpvController, "MpvQt.MpvController")
 
 MpvControllerPrivate::MpvControllerPrivate(MpvController *q)
     : q_ptr(q)
@@ -352,7 +355,7 @@ QVariant MpvController::command(const QStringList &params)
     mpv_node result;
     int err = mpv_command_node(d_ptr->m_mpv, &node, &result);
     if (err < 0) {
-        qDebug() << getError(err) << params;
+        qCDebug(MpvQt_MpvController) << getError(err) << params;
         return QVariant::fromValue(ErrorReturn(err));
     }
     node_autofree f(&result);

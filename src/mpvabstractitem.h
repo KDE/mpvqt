@@ -10,6 +10,7 @@
 #include "mpvqt_export.h"
 
 #include <QtQuick/QQuickFramebufferObject>
+
 #include <mpv/client.h>
 #include <mpv/render_gl.h>
 

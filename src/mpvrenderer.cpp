@@ -5,9 +5,6 @@
  */
 
 #include "mpvrenderer.h"
-#include "mpvabstractitem.h"
-#include "mpvabstractitem_p.h"
-#include "mpvcontroller.h"
 
 #include <QGuiApplication>
 #include <QLoggingCategory>
@@ -15,7 +12,11 @@
 #include <QOpenGLFramebufferObject>
 #include <QQuickWindow>
 
-Q_LOGGING_CATEGORY(MpvQt, "MpvQt.MpvRenderer")
+#include "mpvabstractitem.h"
+#include "mpvabstractitem_p.h"
+#include "mpvcontroller.h"
+
+Q_STATIC_LOGGING_CATEGORY(MpvQt_MpvRenderer, "MpvQt.MpvRenderer")
 
 static void *get_proc_address_mpv(void *ctx, const char *name)
 {
@@ -82,7 +83,7 @@ void MpvRenderer::render()
     // other API details.
     int result = mpv_render_context_render(m_mpv_gl, params);
     if (result < 0) {
-        qCWarning(MpvQt) << "mpv_render_context_render failed:" << MpvController::getError(result);
+        qCWarning(MpvQt_MpvRenderer) << "mpv_render_context_render failed:" << MpvController::getError(result);
         return;
     }
 }
@@ -117,6 +118,7 @@ void MpvRenderer::createMpvRenderContext()
         display.data = qGuiApp->nativeInterface<QNativeInterface::QWaylandApplication>()->display();
     }
 #endif
+
     mpv_render_param params[]{{MPV_RENDER_PARAM_API_TYPE, const_cast<char *>(MPV_RENDER_API_TYPE_OPENGL)},
                               {MPV_RENDER_PARAM_OPENGL_INIT_PARAMS, &gl_init_params},
                               display,

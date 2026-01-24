@@ -7,11 +7,14 @@
 #include "mpvabstractitem.h"
 #include "mpvabstractitem_p.h"
 
+#include <QLoggingCategory>
 #include <QQuickWindow>
 #include <QThread>
 
 #include "mpvcontroller.h"
 #include "mpvrenderer.h"
+
+Q_LOGGING_CATEGORY(MpvQt_MpvAbstractItem, "MpvQt.MpvAbstractItem")
 
 MpvAbstractItemPrivate::MpvAbstractItemPrivate(MpvAbstractItem *q)
     : q_ptr(q)
@@ -23,11 +26,11 @@ MpvAbstractItem::MpvAbstractItem(QQuickItem *parent)
     , d_ptr{std::make_unique<MpvAbstractItemPrivate>(this)}
 {
     if (QQuickWindow::graphicsApi() != QSGRendererInterface::OpenGL) {
-        qDebug() << "MpvAbstractItem: "
-                    "The graphics api must be set to opengl or mpv won't be able to render the video.\n"
-                    "QQuickWindow::setGraphicsApi(QSGRendererInterface::OpenGL)\n"
-                    "The call to the function must happen before constructing "
-                    "the first QQuickWindow in the application.";
+        qCCritical(MpvQt_MpvAbstractItem) << "The graphics api must be set to opengl "
+                                             "or mpv won't be able to render the video.\n"
+                                             "QQuickWindow::setGraphicsApi(QSGRendererInterface::OpenGL)\n"
+                                             "The call to the function must happen before constructing "
+                                             "the first QQuickWindow in the application.";
     }
 
     d_ptr->m_workerThread = new QThread(this);
