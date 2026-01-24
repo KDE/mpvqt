@@ -37,7 +37,7 @@ public:
     Q_INVOKABLE void getPropertyAsync(const QString &property, int id = 0);
 
     Q_INVOKABLE void command(const QStringList &params);
-    Q_INVOKABLE QVariant commandBlocking(const QVariant &params);
+    Q_INVOKABLE QVariant commandBlocking(const QStringList &params);
     Q_INVOKABLE void commandAsync(const QStringList &params, int id = 0);
 
     Q_INVOKABLE QVariant expandText(const QString &text);
