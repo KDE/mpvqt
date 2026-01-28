@@ -193,8 +193,6 @@ void MpvController::init()
     configPath.append(QStringLiteral("/mpvqt.conf"));
     setProperty(QStringLiteral("include"), configPath);
     setProperty(QStringLiteral("vo"), QStringLiteral("libmpv"));
-
-    Q_EMIT initialized();
 }
 
 void MpvController::mpvEvents(void *ctx)

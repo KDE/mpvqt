@@ -166,7 +166,6 @@ Q_SIGNALS:
     void fileLoaded();
     void endFile(QString reason);
     void videoReconfig();
-    void initialized();
 
 private:
     std::unique_ptr<MpvControllerPrivate> d_ptr;
