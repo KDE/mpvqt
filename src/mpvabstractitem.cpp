@@ -43,14 +43,16 @@ MpvAbstractItem::MpvAbstractItem(QQuickItem *parent)
 
     // must wait for init to finish or the mpv object could be accessed while not initialized
     QMetaObject::invokeMethod(d_ptr->m_mpvController, &MpvController::init, Qt::BlockingQueuedConnection);
-    d_ptr->m_mpv = d_ptr->m_mpvController->mpv();
+
+    auto mpvHandleManager = mpvController()->mpvHandleManager();
+    auto renderContext{nullptr};
+    d_ptr->m_mpvResourceManager = std::make_shared<MpvResourceManager>(renderContext, mpvHandleManager);
 }
 
 MpvAbstractItem::~MpvAbstractItem()
 {
     d_ptr->m_workerThread->quit();
     d_ptr->m_workerThread->wait();
-    mpv_terminate_destroy(d_ptr->m_mpv);
     d_ptr->m_workerThread->deleteLater();
 }
 

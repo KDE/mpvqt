@@ -7,6 +7,7 @@
 #ifndef MPVABSTRACTITEM_H
 #define MPVABSTRACTITEM_H
 
+#include "mpvcontroller.h"
 #include "mpvqt_export.h"
 
 #include <QtQuick/QQuickFramebufferObject>
@@ -16,6 +17,44 @@
 
 class MpvController;
 class MpvAbstractItemPrivate;
+
+/**
+ * MpvResourceManager is a lifecycle management utility designed
+ * to handle the safe initialization and destruction of mpv_render_context.
+ * Its primary goal is to ensure that GPU-bound resources are released
+ * on the correct thread and that the underlying mpv_handle remains valid
+ * until all rendering resources are fully cleaned up
+ */
+struct MpvResourceManager {
+    // raw pointer to the mpv OpenGL render context
+    mpv_render_context *mpvRenderContext{nullptr};
+    // Shared pointer to the manager owning the mpv_handle
+    // Ensures the core mpv instance outlives the rendering context
+    std::shared_ptr<MpvHandleManager> mpvHandleManager;
+
+    MpvResourceManager(mpv_render_context *c, std::shared_ptr<MpvHandleManager> owner)
+        : mpvRenderContext(c)
+        , mpvHandleManager(owner)
+    {
+    }
+
+    /**
+     * cleans up mpv's rendering context
+     *
+     * MUST be called from the Qt Render Thread (MpvRenderer)
+     *
+     * An OpenGL context must be current in the calling thread.
+     * This must be the same context used to create the mpvRenderContext.
+     */
+    void freeContext()
+    {
+        if (mpvRenderContext) {
+            mpv_render_context_set_update_callback(mpvRenderContext, nullptr, nullptr);
+            mpv_render_context_free(mpvRenderContext);
+            mpvRenderContext = nullptr;
+        }
+    }
+};
 
 class MPVQT_EXPORT MpvAbstractItem : public QQuickFramebufferObject
 {

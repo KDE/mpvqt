@@ -171,6 +171,13 @@ MpvController::MpvController(QObject *parent)
 {
 }
 
+MpvController::~MpvController()
+{
+    if (d_ptr && d_ptr->m_mpv) {
+        mpv_set_wakeup_callback(d_ptr->m_mpv, nullptr, nullptr);
+    }
+}
+
 void MpvController::init()
 {
     d_ptr = std::make_unique<MpvControllerPrivate>(this);
@@ -193,6 +200,7 @@ void MpvController::init()
     configPath.append(QStringLiteral("/mpvqt.conf"));
     setProperty(QStringLiteral("include"), configPath);
     setProperty(QStringLiteral("vo"), QStringLiteral("libmpv"));
+    d_ptr->m_mpvHandleManager = std::make_shared<MpvHandleManager>(d_ptr->m_mpv);
 }
 
 void MpvController::mpvEvents(void *ctx)
@@ -365,6 +373,11 @@ int MpvController::commandAsync(const QVariant &params, int id)
     mpv_node node;
     d_ptr->setNode(&node, params);
     return mpv_command_node_async(d_ptr->m_mpv, id, &node);
+}
+
+std::shared_ptr<MpvHandleManager> MpvController::mpvHandleManager() const
+{
+    return d_ptr->m_mpvHandleManager;
 }
 
 QString MpvController::getError(int error)

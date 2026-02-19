@@ -17,8 +17,8 @@ public:
     MpvAbstractItem *q_ptr;
     QThread *m_workerThread{nullptr};
     MpvController *m_mpvController{nullptr};
-    mpv_handle *m_mpv{nullptr};
     bool m_isRendererReady{false};
+    std::shared_ptr<MpvResourceManager> m_mpvResourceManager;
 };
 
 #endif // MPVABSTRACTITEM_P_H_INCLUDED

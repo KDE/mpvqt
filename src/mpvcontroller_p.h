@@ -22,6 +22,7 @@ public:
 
     MpvController *q_ptr;
     mpv_handle *m_mpv{nullptr};
+    std::shared_ptr<MpvHandleManager> m_mpvHandleManager;
 };
 
 #endif // MPVCONTROLLER_P_H_INCLUDED

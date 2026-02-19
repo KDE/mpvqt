@@ -18,6 +18,20 @@
 
 #include <memory>
 
+struct MpvHandleManager {
+    mpv_handle *mpvHandle{nullptr};
+    explicit MpvHandleManager(mpv_handle *h)
+        : mpvHandle(h)
+    {
+    }
+    ~MpvHandleManager()
+    {
+        if (mpvHandle) {
+            mpv_terminate_destroy(mpvHandle);
+        }
+    }
+};
+
 class MpvControllerPrivate;
 
 /**
@@ -62,8 +76,11 @@ Q_DECLARE_METATYPE(ErrorReturn)
 class MPVQT_EXPORT MpvController : public QObject
 {
     Q_OBJECT
+    friend class MpvAbstractItem;
+
 public:
     explicit MpvController(QObject *parent = nullptr);
+    ~MpvController();
 
     /**
      * Return an error string from an ErrorReturn.
@@ -168,6 +185,7 @@ Q_SIGNALS:
     void videoReconfig();
 
 private:
+    std::shared_ptr<MpvHandleManager> mpvHandleManager() const;
     std::unique_ptr<MpvControllerPrivate> d_ptr;
 };
 

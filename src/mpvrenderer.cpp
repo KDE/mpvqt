@@ -42,9 +42,8 @@ MpvRenderer::MpvRenderer()
 
 MpvRenderer::~MpvRenderer()
 {
-    if (m_mpv_gl) {
-        mpv_render_context_set_update_callback(m_mpv_gl, nullptr, nullptr);
-        mpv_render_context_free(m_mpv_gl);
+    if (m_mpvResourceManager) {
+        m_mpvResourceManager->freeContext();
     }
 }
 
@@ -52,7 +51,10 @@ void MpvRenderer::synchronize(QQuickFramebufferObject *item)
 {
     MpvAbstractItem *mpvAItem = static_cast<MpvAbstractItem *>(item);
     m_mpvAItem = mpvAItem;
-    m_mpv = mpvAItem->d_ptr->m_mpv;
+
+    if (!m_mpvResourceManager) {
+        m_mpvResourceManager = mpvAItem->d_ptr->m_mpvResourceManager;
+    }
 
     if (mpvAItem->d_ptr->m_isRendererReady != m_isFramebufferReady) {
         mpvAItem->d_ptr->m_isRendererReady = m_isFramebufferReady;
@@ -81,7 +83,7 @@ void MpvRenderer::render()
                                  {MPV_RENDER_PARAM_INVALID, nullptr}};
     // See render_gl.h on what OpenGL environment mpv expects, and
     // other API details.
-    int result = mpv_render_context_render(m_mpv_gl, params);
+    int result = mpv_render_context_render(m_mpvResourceManager->mpvRenderContext, params);
     if (result < 0) {
         qCWarning(MpvQt_MpvRenderer) << "mpv_render_context_render failed:" << MpvController::getError(result);
         return;
@@ -90,20 +92,16 @@ void MpvRenderer::render()
 
 QOpenGLFramebufferObject *MpvRenderer::createFramebufferObject(const QSize &size)
 {
-    if (!m_mpv_gl) {
-        createMpvRenderContext();
+    if (m_mpvResourceManager && !m_mpvResourceManager->mpvRenderContext) {
+        m_mpvResourceManager->mpvRenderContext = createMpvRenderContext();
         m_isFramebufferReady = true;
     }
 
     return QQuickFramebufferObject::Renderer::createFramebufferObject(size);
 }
 
-void MpvRenderer::createMpvRenderContext()
+mpv_render_context *MpvRenderer::createMpvRenderContext()
 {
-    if (!m_mpv) {
-        return;
-    }
-
     mpv_opengl_init_params gl_init_params{get_proc_address_mpv, nullptr};
 
     mpv_render_param display{MPV_RENDER_PARAM_INVALID, nullptr};
@@ -124,12 +122,16 @@ void MpvRenderer::createMpvRenderContext()
                               display,
                               {MPV_RENDER_PARAM_INVALID, nullptr}};
 
-    int result = mpv_render_context_create(&m_mpv_gl, m_mpv, params);
+    mpv_render_context *renderCtx = nullptr;
+    mpv_handle *handle = m_mpvResourceManager->mpvHandleManager->mpvHandle;
+    int result = mpv_render_context_create(&renderCtx, handle, params);
     if (result < 0) {
-        qFatal("failed to initialize mpv GL context");
+        qCritical() << "failed to initialize mpv GL context:" << mpv_error_string(result);
+        return nullptr;
     }
 
-    mpv_render_context_set_update_callback(m_mpv_gl, on_mpv_redraw, this);
+    mpv_render_context_set_update_callback(renderCtx, on_mpv_redraw, this);
+    return renderCtx;
 }
 
 void MpvRenderer::requestUpdate()

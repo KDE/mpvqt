@@ -11,6 +11,8 @@
 
 #include <mpv/render_gl.h>
 
+#include "mpvabstractitem.h"
+
 class MpvAbstractItem;
 
 class MpvRenderer : public QQuickFramebufferObject::Renderer
@@ -28,11 +30,10 @@ public:
     void requestUpdate();
 
 private:
-    void createMpvRenderContext();
+    mpv_render_context *createMpvRenderContext();
     QPointer<MpvAbstractItem> m_mpvAItem{nullptr};
-    mpv_render_context *m_mpv_gl{nullptr};
-    mpv_handle *m_mpv{nullptr};
     bool m_isFramebufferReady{false};
+    std::shared_ptr<MpvResourceManager> m_mpvResourceManager;
 };
 
 #endif // MPVRENDERER_H
