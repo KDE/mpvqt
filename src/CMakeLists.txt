@@ -22,7 +22,7 @@ target_sources(MpvQt
 
 ecm_generate_export_header(MpvQt
     BASE_NAME MpvQt
-    VERSION ${CMAKE_PROJECT_VERSION}
+    VERSION ${PROJECT_VERSION}
     USE_VERSION_HEADER
 )
 
