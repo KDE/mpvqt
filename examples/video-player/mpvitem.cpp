@@ -119,7 +119,7 @@ void MpvItem::loadFile(const QString &file)
         Q_EMIT currentUrlChanged();
     }
 
-    Q_EMIT command(QStringList() << QStringLiteral("loadfile") << m_currentUrl.toString(QUrl::PreferLocalFile));
+    command(QStringList() << QStringLiteral("loadfile") << m_currentUrl.toString(QUrl::PreferLocalFile));
 }
 
 QString MpvItem::mediaTitle()
@@ -137,7 +137,7 @@ void MpvItem::setPosition(double value)
     if (qFuzzyCompare(value, position())) {
         return;
     }
-    Q_EMIT setPropertyAsync(MpvProperties::self()->Position, value);
+    setPropertyAsync(MpvProperties::self()->Position, value);
 }
 
 double MpvItem::duration()
@@ -155,7 +155,7 @@ void MpvItem::setPause(bool value)
     if (value == pause()) {
         return;
     }
-    Q_EMIT setPropertyAsync(MpvProperties::self()->Pause, value);
+    setPropertyAsync(MpvProperties::self()->Pause, value);
 }
 
 int MpvItem::volume()
@@ -168,7 +168,7 @@ void MpvItem::setVolume(int value)
     if (value == volume()) {
         return;
     }
-    Q_EMIT setPropertyAsync(MpvProperties::self()->Volume, value);
+    setPropertyAsync(MpvProperties::self()->Volume, value);
 }
 
 QString MpvItem::formattedDuration() const
