@@ -230,6 +230,8 @@ void MpvController::eventHandler()
             auto prop = static_cast<mpv_event_end_file *>(event->data);
             if (prop->reason == MPV_END_FILE_REASON_EOF) {
                 Q_EMIT endFile(QStringLiteral("eof"));
+            } else if (prop->reason == MPV_END_FILE_REASON_STOP) {
+                Q_EMIT endFile(QStringLiteral("stop"));
             } else if (prop->reason == MPV_END_FILE_REASON_ERROR) {
                 Q_EMIT endFile(QStringLiteral("error"));
             }
