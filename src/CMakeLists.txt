@@ -13,7 +13,12 @@ set_target_properties(MpvQt PROPERTIES
     EXPORT_NAME MpvQt
 )
 
+qt_extract_metatypes(MpvQt OUTPUT_FILES METATYPES_FILE)
+get_filename_component(METATYPES_FILE_NAME ${METATYPES_FILE} NAME)
+
 target_sources(MpvQt
+    INTERFACE
+        $<INSTALL_INTERFACE:${KDE_INSTALL_QTMETATYPESDIR}/${METATYPES_FILE_NAME}>
     PRIVATE
         mpvabstractitem.h mpvabstractitem.cpp
         mpvcontroller.h mpvcontroller.cpp
@@ -43,6 +48,7 @@ ecm_generate_headers(MpvQt_HEADERS
 )
 
 install(TARGETS MpvQt EXPORT MpvQtTargets ${KDE_INSTALL_TARGETS_DEFAULT_ARGS})
+install(FILES ${METATYPES_FILE} DESTINATION ${KDE_INSTALL_QTMETATYPESDIR})
 
 install(FILES
     ${CMAKE_CURRENT_BINARY_DIR}/mpvqt_export.h
