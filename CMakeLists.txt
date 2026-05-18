@@ -6,7 +6,7 @@
 
 cmake_minimum_required(VERSION 3.16...3.31)
 
-project(MpvQt VERSION 1.1.1 LANGUAGES CXX)
+project(MpvQt VERSION 1.2.0 LANGUAGES CXX)
 
 set(REQUIRED_QT_VERSION 6.5.0)
 
@@ -40,7 +40,7 @@ if(ECM_FOUND)
         VARIABLE_PREFIX MPVQT
         VERSION_HEADER "${CMAKE_CURRENT_BINARY_DIR}/src/mpvqt_version.h"
         PACKAGE_VERSION_FILE "${CMAKE_CURRENT_BINARY_DIR}/MpvQtConfigVersion.cmake"
-        SOVERSION 2
+        SOVERSION 3
     )
 
     include(CMakePackageConfigHelpers)
