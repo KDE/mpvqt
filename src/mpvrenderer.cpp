@@ -23,7 +23,8 @@ static void *get_proc_address_mpv(void *ctx, const char *name)
     Q_UNUSED(ctx)
 
     QOpenGLContext *glctx = QOpenGLContext::currentContext();
-    if (!glctx) {
+    if (glctx == nullptr) {
+        qCDebug(MpvQt_MpvRenderer) << "get_proc_address_mpv: glctx is nullptr";
         return nullptr;
     }
 
@@ -126,7 +127,7 @@ mpv_render_context *MpvRenderer::createMpvRenderContext()
     mpv_handle *handle = m_mpvResourceManager->mpvHandleManager->mpvHandle;
     int result = mpv_render_context_create(&renderCtx, handle, params);
     if (result < 0) {
-        qCritical() << "failed to initialize mpv GL context:" << mpv_error_string(result);
+        qCCritical(MpvQt_MpvRenderer) << "failed to initialize mpv GL context:" << mpv_error_string(result);
         return nullptr;
     }
 

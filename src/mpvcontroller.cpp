@@ -24,19 +24,22 @@ mpv_node_list *MpvControllerPrivate::createList(mpv_node *dst, bool is_map, int 
 {
     dst->format = is_map ? MPV_FORMAT_NODE_MAP : MPV_FORMAT_NODE_ARRAY;
     mpv_node_list *list = new mpv_node_list();
-    dst->u.list = list;
-    if (!list) {
+    if (list == nullptr) {
+        qCDebug(MpvQt_MpvController) << "createList: list is nullptr";
         freeNode(dst);
         return nullptr;
     }
+    dst->u.list = list;
     list->values = new mpv_node[num]();
-    if (!list->values) {
+    if (list->values == nullptr) {
+        qCDebug(MpvQt_MpvController) << "createList: list->values is nullptr";
         freeNode(dst);
         return nullptr;
     }
     if (is_map) {
         list->keys = new char *[num]();
-        if (!list->keys) {
+        if (list->keys == nullptr) {
+            qCDebug(MpvQt_MpvController) << "createList: list->keys is nullptr";
             freeNode(dst);
             return nullptr;
         }
@@ -64,7 +67,8 @@ void MpvControllerPrivate::setNode(mpv_node *dst, const QVariant &src)
     } else if (src.canConvert<QVariantList>()) {
         QVariantList qlist = src.toList();
         mpv_node_list *list = createList(dst, false, qlist.size());
-        if (!list) {
+        if (list == nullptr) {
+            qCDebug(MpvQt_MpvController) << "setNode QVariantList: list is nullptr";
             dst->format = MPV_FORMAT_NONE;
             return;
         }
@@ -75,7 +79,8 @@ void MpvControllerPrivate::setNode(mpv_node *dst, const QVariant &src)
     } else if (src.canConvert<QVariantMap>()) {
         QVariantMap qmap = src.toMap();
         mpv_node_list *list = createList(dst, true, qmap.size());
-        if (!list) {
+        if (list == nullptr) {
+            qCDebug(MpvQt_MpvController) << "setNode QVariantMap: list is nullptr";
             dst->format = MPV_FORMAT_NONE;
             return;
         }
@@ -83,7 +88,8 @@ void MpvControllerPrivate::setNode(mpv_node *dst, const QVariant &src)
         int n = 0;
         for (auto it = qmap.constKeyValueBegin(); it != qmap.constKeyValueEnd(); ++it) {
             list->keys[n] = qstrdup(it.operator*().first.toUtf8().data());
-            if (!list->keys[n]) {
+            if (list->keys[n] == nullptr) {
+                qCDebug(MpvQt_MpvController) << "setNode QVariantMap: list->keys[n] is nullptr";
                 freeNode(dst);
                 dst->format = MPV_FORMAT_NONE;
                 return;
@@ -99,9 +105,6 @@ void MpvControllerPrivate::setNode(mpv_node *dst, const QVariant &src)
 
 bool MpvControllerPrivate::testType(const QVariant &v, QMetaType::Type t)
 {
-    // The Qt docs say: "Although this function is declared as returning
-    // QVariant::Type(obsolete), the return value should be interpreted
-    // as QMetaType::Type." So a cast is needed to avoid warnings.
     return v.typeId() == t;
 }
 
@@ -147,6 +150,10 @@ inline QVariant MpvControllerPrivate::nodeToVariant(const mpv_node *node)
         return QVariant(node->u.double_);
     case MPV_FORMAT_NODE_ARRAY: {
         mpv_node_list *list = node->u.list;
+        if (list == nullptr) {
+            qCDebug(MpvQt_MpvController) << "nodeToVariant MPV_FORMAT_NODE_ARRAY: list is nullptr";
+            return {};
+        }
         QVariantList qlist;
         for (int n = 0; n < list->num; ++n) {
             qlist.append(nodeToVariant(&list->values[n]));
@@ -155,6 +162,10 @@ inline QVariant MpvControllerPrivate::nodeToVariant(const mpv_node *node)
     }
     case MPV_FORMAT_NODE_MAP: {
         mpv_node_list *list = node->u.list;
+        if (list == nullptr) {
+            qCDebug(MpvQt_MpvController) << "nodeToVariant MPV_FORMAT_NODE_MAP: list is nullptr";
+            return {};
+        }
         QVariantMap qmap;
         for (int n = 0; n < list->num; ++n) {
             qmap.insert(QString::fromUtf8(list->keys[n]), nodeToVariant(&list->values[n]));
@@ -186,7 +197,7 @@ void MpvController::init()
     std::setlocale(LC_NUMERIC, "C");
 
     d_ptr->m_mpv = mpv_create();
-    if (!d_ptr->m_mpv) {
+    if (d_ptr->m_mpv == nullptr) {
         qFatal("could not create mpv context");
     }
     if (mpv_initialize(d_ptr->m_mpv) < 0) {
@@ -205,6 +216,10 @@ void MpvController::init()
 
 void MpvController::mpvEvents(void *ctx)
 {
+    if (ctx == nullptr) {
+        qCDebug(MpvQt_MpvController) << "mpvEvents: ctx is nullptr";
+        return;
+    }
     QMetaObject::invokeMethod(static_cast<MpvController *>(ctx), &MpvController::eventHandler, Qt::QueuedConnection);
 }
 
@@ -212,6 +227,10 @@ void MpvController::eventHandler()
 {
     while (d_ptr->m_mpv) {
         mpv_event *event = mpv_wait_event(d_ptr->m_mpv, 0);
+        if (event == nullptr) {
+            qCDebug(MpvQt_MpvController) << "eventHandler: event is nullptr";
+            continue;
+        }
         if (event->event_id == MPV_EVENT_NONE) {
             break;
         }
@@ -227,7 +246,11 @@ void MpvController::eventHandler()
         }
 
         case MPV_EVENT_END_FILE: {
-            auto prop = static_cast<mpv_event_end_file *>(event->data);
+            const auto *prop = static_cast<mpv_event_end_file *>(event->data);
+            if (prop == nullptr) {
+                qCDebug(MpvQt_MpvController) << "eventHandler MPV_EVENT_END_FILE: prop is nullptr";
+                continue;
+            }
             if (prop->reason == MPV_END_FILE_REASON_EOF) {
                 Q_EMIT endFile(QStringLiteral("eof"));
             } else if (prop->reason == MPV_END_FILE_REASON_STOP) {
@@ -244,8 +267,12 @@ void MpvController::eventHandler()
         }
 
         case MPV_EVENT_GET_PROPERTY_REPLY: {
-            mpv_event_property *prop = static_cast<mpv_event_property *>(event->data);
-            auto data = d_ptr->nodeToVariant(reinterpret_cast<mpv_node *>(prop->data));
+            const mpv_event_property *prop = static_cast<mpv_event_property *>(event->data);
+            if (prop == nullptr) {
+                qCDebug(MpvQt_MpvController) << "eventHandler MPV_EVENT_GET_PROPERTY_REPLY: prop is nullptr";
+                continue;
+            }
+            const auto data = d_ptr->nodeToVariant(reinterpret_cast<mpv_node *>(prop->data));
             Q_EMIT asyncReply(data, {*event});
             break;
         }
@@ -257,13 +284,21 @@ void MpvController::eventHandler()
 
         case MPV_EVENT_COMMAND_REPLY: {
             mpv_event_property *prop = static_cast<mpv_event_property *>(event->data);
+            if (prop == nullptr) {
+                qCDebug(MpvQt_MpvController) << "eventHandler MPV_EVENT_COMMAND_REPLY: prop is nullptr";
+                continue;
+            }
             auto data = d_ptr->nodeToVariant(reinterpret_cast<mpv_node *>(prop));
             Q_EMIT asyncReply(data, {*event});
             break;
         }
 
         case MPV_EVENT_PROPERTY_CHANGE: {
-            mpv_event_property *prop = static_cast<mpv_event_property *>(event->data);
+            const mpv_event_property *prop = static_cast<mpv_event_property *>(event->data);
+            if (prop == nullptr) {
+                qCDebug(MpvQt_MpvController) << "eventHandler MPV_EVENT_PROPERTY_CHANGE: prop is nullptr";
+                continue;
+            }
             QVariant data;
             switch (prop->format) {
             case MPV_FORMAT_DOUBLE:
@@ -297,7 +332,7 @@ void MpvController::eventHandler()
         case MPV_EVENT_LOG_MESSAGE: {
             mpv_event_log_message *logMessageEvent = static_cast<mpv_event_log_message *>(event->data);
             if (logMessageEvent == nullptr) {
-                qDebug() << "MpvController::eventHandler MPV_EVENT_LOG_MESSAGE: logMessageEvent is nullptr";
+                qCDebug(MpvQt_MpvController) << "eventHandler MPV_EVENT_LOG_MESSAGE: logMessageEvent is nullptr";
                 break;
             }
             Q_EMIT logMessage(QString::fromUtf8(logMessageEvent->prefix), QString::fromUtf8(logMessageEvent->level), QString::fromUtf8(logMessageEvent->text));
@@ -306,7 +341,7 @@ void MpvController::eventHandler()
         case MPV_EVENT_CLIENT_MESSAGE: {
             mpv_event_client_message *clientMessageEvent = static_cast<mpv_event_client_message *>(event->data);
             if (clientMessageEvent == nullptr) {
-                qDebug() << "MpvController::eventHandler MPV_EVENT_CLIENT_MESSAGE: clientMessageEvent is nullptr";
+                qCDebug(MpvQt_MpvController) << "eventHandler MPV_EVENT_CLIENT_MESSAGE: clientMessageEvent is nullptr";
                 break;
             }
             QStringList args;
@@ -331,7 +366,7 @@ void MpvController::eventHandler()
         case MPV_EVENT_HOOK: {
             mpv_event_hook *hookEvent = static_cast<mpv_event_hook *>(event->data);
             if (hookEvent == nullptr) {
-                qDebug() << "MpvController::eventHandler MPV_EVENT_HOOK: hookEvent is nullptr";
+                qCDebug(MpvQt_MpvController) << "eventHandler MPV_EVENT_HOOK: hookEvent is nullptr";
                 break;
             }
             Q_EMIT hook(QString::fromUtf8(hookEvent->name), hookEvent->id, event->reply_userdata);
