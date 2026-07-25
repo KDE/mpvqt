@@ -291,19 +291,57 @@ void MpvController::eventHandler()
             Q_EMIT propertyChanged(QString::fromUtf8(prop->name), data);
             break;
         }
-        case MPV_EVENT_NONE:
         case MPV_EVENT_SHUTDOWN:
-        case MPV_EVENT_LOG_MESSAGE:
-        case MPV_EVENT_CLIENT_MESSAGE:
+            Q_EMIT shutdown();
+            break;
+        case MPV_EVENT_LOG_MESSAGE: {
+            mpv_event_log_message *logMessageEvent = static_cast<mpv_event_log_message *>(event->data);
+            if (logMessageEvent == nullptr) {
+                qDebug() << "MpvController::eventHandler MPV_EVENT_LOG_MESSAGE: logMessageEvent is nullptr";
+                break;
+            }
+            Q_EMIT logMessage(QString::fromUtf8(logMessageEvent->prefix), QString::fromUtf8(logMessageEvent->level), QString::fromUtf8(logMessageEvent->text));
+            break;
+        }
+        case MPV_EVENT_CLIENT_MESSAGE: {
+            mpv_event_client_message *clientMessageEvent = static_cast<mpv_event_client_message *>(event->data);
+            if (clientMessageEvent == nullptr) {
+                qDebug() << "MpvController::eventHandler MPV_EVENT_CLIENT_MESSAGE: clientMessageEvent is nullptr";
+                break;
+            }
+            QStringList args;
+            for (int i = 0; i < clientMessageEvent->num_args; i++) {
+                args.append(QString::fromUtf8(clientMessageEvent->args[i]));
+            }
+            Q_EMIT clientMessage(event->reply_userdata, args);
+            break;
+        }
         case MPV_EVENT_AUDIO_RECONFIG:
+            Q_EMIT audioReconfig();
+            break;
         case MPV_EVENT_SEEK:
+            Q_EMIT seek();
+            break;
         case MPV_EVENT_PLAYBACK_RESTART:
+            Q_EMIT playbackRestart();
+            break;
         case MPV_EVENT_QUEUE_OVERFLOW:
-        case MPV_EVENT_HOOK:
+            Q_EMIT queueOverflow();
+            break;
+        case MPV_EVENT_HOOK: {
+            mpv_event_hook *hookEvent = static_cast<mpv_event_hook *>(event->data);
+            if (hookEvent == nullptr) {
+                qDebug() << "MpvController::eventHandler MPV_EVENT_HOOK: hookEvent is nullptr";
+                break;
+            }
+            Q_EMIT hook(QString::fromUtf8(hookEvent->name), hookEvent->id, event->reply_userdata);
+            break;
+        }
 #if MPV_ENABLE_DEPRECATED
         case MPV_EVENT_IDLE:
         case MPV_EVENT_TICK:
 #endif
+        case MPV_EVENT_NONE:
             break;
         }
     }

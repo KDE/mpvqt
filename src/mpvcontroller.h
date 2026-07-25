@@ -183,6 +183,14 @@ Q_SIGNALS:
     void fileLoaded();
     void endFile(QString reason);
     void videoReconfig();
+    void seek();
+    void playbackRestart();
+    void queueOverflow();
+    void shutdown();
+    void logMessage(QString prefix, QString level, QString msg);
+    void clientMessage(uint64_t eventId, QStringList args);
+    void audioReconfig();
+    void hook(QString name, uint64_t hookId, uint64_t eventId);
 
 private:
     std::shared_ptr<MpvHandleManager> mpvHandleManager() const;
